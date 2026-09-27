@@ -1,0 +1,59 @@
+/* Noctis Agentic — design tokens (noctisagentic.zone)
+   Single theme: "Agentic" (Degen base + Midnight City pixel layer). Copy unchanged. */
+/* Fonts are self-hosted: see ../fonts/fonts.css, linked before this sheet. */
+
+[data-theme="agentic"]{
+  /* grounds */
+  --paper:#0B0E13; --surface:#12161D; --surface-2:#171C24; --hover:#1E242E; --desk:#07090C;
+  --panel:#141A2B; --panel-2:#111621; --panel-3:#10141A; --panel-rule:#2B3446;
+  /* rules */
+  --rule:#242B35; --rule-2:#1E242E; --rule-faint:#1A1F27; --rule-strong:#38414F;
+  /* text ramp */
+  --ink:#F4F7FA; --t2:#C7D0DC; --t3:#A8B3C2; --t4:#98A4B4; --t5:#8E9AAB;
+  /* primary (hot pink, legacy name "blue" kept for token parity with noctis.zone / NoctisSwap) */
+  --blue:#FF2FB0; --blue-h:#FF57C0; --blue-d:#FF8AD8; --blue-t:#FF8AD8; --on-blue:#07090C;
+  /* status */
+  --green:#00FFA3; --green-2:#00FFA3; --chip:#00FFA3; --chip-fg:#07090C;
+  --amber:#FFD400; --red:#FF5C7A; --chart-up:#00FFA3; --chart-down:#FF5C7A;
+  --track:#2A3340; --bar-empty:#161B22;
+  /* the 5-colour accent cycle — buttons, borders, tabs, KPI tops rotate through these in order */
+  --c1:#FF2FB0; --c2:#00E5FF; --c3:#00FFA3; --c4:#FFD400; --c5:#FF7A1A;
+  --mark-filter:invert(1);
+  /* type */
+  --pix:'Jersey 20','Pixelify Sans',monospace;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --body:'Inter',system-ui,sans-serif;
+  --logo:'Montserrat',sans-serif;
+  --pxs:1.28; /* pixel-font optical scale: multiply every var(--pix) size by this */
+  /* signature gradient (SIGN IN / primary CTA) */
+  --drift:linear-gradient(90deg,#A83A80 0%,#6E42BC 20%,#2D6099 40%,#1C7460 60%,#7E6522 80%,#A83A80 100%);
+  /* bevel used on all pixel buttons */
+  --bevel:inset 2px 2px 0 rgba(255,255,255,.3),inset -2px -2px 0 rgba(0,0,0,.35);
+  /* retro monitor */
+  --crt-bezel:linear-gradient(180deg,#E6DFCC,#CFC6AF 60%,#BDB39B);
+  --crt-screen-border:22px solid #141519;
+  --crt-radius:58px / 76px;
+  --crt-ring:0 0 0 4px #A99F87,0 0 0 9px #EFE9D8,0 0 0 11px #B8AE96;
+  --crt-pad:46px 64px 0;
+}
+html,body{margin:0;background:#0B0E13;color:#F4F7FA;-webkit-font-smoothing:antialiased;font-synthesis-weight:none}
+a{color:#FF8AD8;text-decoration:none} a:hover{color:#F4F7FA}
+*:focus-visible{outline:2px solid #FF2FB0;outline-offset:2px}
+::selection{background:rgba(0,255,163,.25)}
+input,button,select,textarea{font:inherit;color:inherit}
+input[type=range]{accent-color:#FF2FB0}
+*{scrollbar-width:none;-ms-overflow-style:none} *::-webkit-scrollbar{width:0;height:0;display:none}
+img.pixel,canvas.pixel{image-rendering:pixelated}
+
+@keyframes mtBlink{0%,100%{opacity:1}50%{opacity:.2}}           /* live dots — steps(2) 1.2–1.6s */
+@keyframes dgDrift{0%{background-position:0% 50%}100%{background-position:-300% 50%}} /* --drift, 300% size, 14s linear */
+@keyframes agBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}      /* city agent pins 2.2–3.4s */
+@keyframes agIn{0%{opacity:0;transform:translateX(-8px)}100%{opacity:1;transform:none}} /* new feed rows 280ms */
+@keyframes agCaret{0%,49%{opacity:1}50%,100%{opacity:0}}          /* headline "_" caret 1s */
+
+/* scanline overlay (toggle) */
+.scanlines{position:fixed;inset:0;pointer-events:none;z-index:90;background:repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 1px,transparent 1px 3px)}
+/* retro curved glass (retro mode only) */
+.crt-glass{position:absolute;inset:0;pointer-events:none;z-index:91;border-radius:36px / 54px;
+  box-shadow:inset 0 0 70px 14px rgba(0,0,0,.55),inset 0 0 14px 2px rgba(0,0,0,.8);
+  background:radial-gradient(ellipse 62% 34% at 30% 10%,rgba(255,255,255,.11),transparent 70%)}

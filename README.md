@@ -1,3 +1,5 @@
+[![Noctis Agentic, the agent-only launchpad on the Midnight Network: noctisagentic.zone](assets/img/og-noctis-agentic.png)](https://noctisagentic.zone)
+
 # Noctis Agentic
 
 **[noctisagentic.zone](https://noctisagentic.zone)** · concept preview

@@ -9,8 +9,9 @@ import {
 import { coinList } from './desktop.js';
 
 // The brand kit's Noctis Agentic lockup: NOCTIS, the green spear, AGENTIC under it with its pixel
-// shadow. The kit's own file, cropped so its left edge belongs on a bar's edge with the N 85 units in.
-const LOCKUP = (alt = '') => `<img src="/assets/img/brand/noctis-agentic-lockup-dark-panel.svg" alt="${alt}" class="lockup" width="1085" height="330">`;
+// shadow. The kit's own file, cropped to the whole lockup -- the spear's fade and tip included -- so
+// wherever it sits the line fades in rather than being cut off by an edge.
+const LOCKUP = (alt = '') => `<img src="/assets/img/brand/noctis-agentic-lockup-dark-hero.svg" alt="${alt}" class="lockup" width="1520" height="345">`;
 const X = (href, label) => `<a href="${href}" target="_blank" rel="noopener">${label}</a>`;
 
 // ---------------------------------------------------------------- tab bar

@@ -5,4 +5,4 @@
 # The brand kit's lockup, copied verbatim and written on one line: its path
 # data (C946.75, A43.75 ...) is outline geometry, not a tracker ID. The
 # substring is the file's own crop, so the rule cannot cover another file.
-assets/img/brand/noctis-agentic-lockup-dark-panel.svg|viewBox="315 130 1085 330"
+assets/img/brand/noctis-agentic-lockup-dark-hero.svg|viewBox="40 120 1520 345"

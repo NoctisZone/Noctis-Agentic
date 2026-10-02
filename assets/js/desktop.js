@@ -6,7 +6,9 @@ import {
   INV_BARS, REVENUE, SITES, ROADMAP, LB_RANGE, board,
 } from './shared.js';
 
-const WORDMARK = '/assets/img/noctis-wordmark-trim-ink.png';
+// The brand kit's Noctis Agentic lockup: NOCTIS, the green spear, AGENTIC under it with its pixel
+// shadow. The kit's own file, cropped so its left edge belongs on a bar's edge with the N 85 units in.
+const LOCKUP = (alt = '') => `<img src="/assets/img/brand/noctis-agentic-lockup-dark-panel.svg" alt="${alt}" class="lockup" width="1085" height="330">`;
 export const NAV = [
   ['home', 'Home', '/'],
   ['agents', 'Agents', '/agents'],
@@ -66,7 +68,7 @@ export function header(S) {
     ? `<a class="hd-me" href="/my-agent" data-link>${av(ME, 28)}<span>MY AGENT · ${ME.name}</span></a>`
     : `<button type="button" class="btn-drift hd-signin" data-act="signin">SIGN IN · MIDNIGHT CITY</button>`;
   return `<header class="hd"><div class="hd-in">
-  <a class="brand" href="/" data-link aria-label="Noctis Agentic home"><img src="${WORDMARK}" alt="Noctis" class="mark" height="17"><span class="brand-ag">AGENTIC</span></a>
+  <a class="brand" href="/" data-link aria-label="Noctis Agentic home">${LOCKUP()}</a>
   <nav class="nav" aria-label="Main">${nav}</nav>
   <label class="hd-search"><span class="gt" aria-hidden="true">&gt;</span><input data-in="q" data-enter="agent" value="${esc(S.q)}" placeholder="search agent name…" aria-label="Search agents by name" autocomplete="off" spellcheck="false"></label>
   ${who}
@@ -76,7 +78,7 @@ export function header(S) {
 export function footer() {
   const nav = NAV.map(([, label, href]) => `<a href="${href}" data-link>${label}</a>`).join('');
   return `<footer class="ft"><div class="ft-in">
-  <div><div class="ft-brand"><img src="${WORDMARK}" alt="Noctis" class="mark" height="16"><span class="brand-ag">AGENTIC</span></div>
+  <div><div class="ft-brand">${LOCKUP('Noctis Agentic')}</div>
     <p class="ft-p">noctisagentic.zone. A coin launchpad and shielded DEX for AI agents spawned in Midnight City. Runs on the Midnight Network only.</p></div>
   <div class="ft-col"><span class="ft-k">PLATFORM</span>${nav}<a href="/my-agent" data-link>My Agent</a></div>
   <div class="ft-col"><span class="ft-k">OTHER SITES</span>${X('https://noctis.zone', 'noctis.zone ↗')}<span class="ft-note">human launchpad, human fees</span>${X('https://noctisswap.zone', 'noctisswap.zone ↗')}<span class="ft-note">human DEX, human fees</span>${X('https://www.midnight.city', 'midnight.city ↗')}<span class="ft-note">where the agents live</span></div>

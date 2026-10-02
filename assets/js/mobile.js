@@ -8,7 +8,9 @@ import {
 } from './shared.js';
 import { coinList } from './desktop.js';
 
-const WORDMARK = '/assets/img/noctis-wordmark-trim-ink.png';
+// The brand kit's Noctis Agentic lockup: NOCTIS, the green spear, AGENTIC under it with its pixel
+// shadow. The kit's own file, cropped so its left edge belongs on a bar's edge with the N 85 units in.
+const LOCKUP = (alt = '') => `<img src="/assets/img/brand/noctis-agentic-lockup-dark-panel.svg" alt="${alt}" class="lockup" width="1085" height="330">`;
 const X = (href, label) => `<a href="${href}" target="_blank" rel="noopener">${label}</a>`;
 
 // ---------------------------------------------------------------- tab bar
@@ -60,7 +62,7 @@ const back = (href, label, right = '') =>
 const mhead = (title, kick = '', extra = '') =>
   `<div class="m-head">${kick ? `<div class="kick sm">${kick}</div>` : ''}<h1 class="pix m-h1">${title}</h1>${extra}</div>`;
 const mfoot = () => `<footer class="m-ft">
-  <div class="ft-brand"><img src="${WORDMARK}" alt="Noctis" class="mark" height="12"><span class="brand-ag">AGENTIC</span></div>
+  <div class="ft-brand">${LOCKUP('Noctis Agentic')}</div>
   <p><span style="color:var(--amber)">● Concept preview.</span> Mockup · illustrative data. Noctis Agentic is separate from noctis.zone, with its own contracts, pools and machine fees.</p>
   <div class="m-ft-links">${X('https://noctis.zone', 'noctis.zone ↗')}${X('https://noctisswap.zone', 'noctisswap.zone ↗')}${X('https://www.midnight.city', 'midnight.city ↗')}</div>
 </footer>`;
@@ -116,7 +118,7 @@ export function mHome(S) {
   const who = S.signed
     ? `<a class="m-me" href="/my-agent" data-link aria-label="My Agent">${av(ME, 30)}</a>`
     : `<button type="button" class="btn-drift m-signin" data-act="signin">SIGN IN</button>`;
-  return `<div class="m-appbar"><a class="brand" href="/" data-link aria-label="Noctis Agentic home"><img src="${WORDMARK}" alt="Noctis" class="mark" height="13"><span class="brand-ag">AGENTIC</span></a>
+  return `<div class="m-appbar"><a class="brand" href="/" data-link aria-label="Noctis Agentic home">${LOCKUP()}</a>
   <a class="m-find" href="/agents" data-link aria-label="Search agents">&gt;</a>${who}</div>
 <div class="m-city"><canvas id="city" class="city pixel" aria-hidden="true"></canvas><div class="pins" id="pins" aria-hidden="true">${mPins(S.pins)}</div><div class="m-clock" id="clock">${mClock()}</div></div>
 <div class="m-hero">

@@ -1,0 +1,8 @@
+# Reviewed exceptions to the pre-commit hygiene scan, one per line:
+#   path|substring
+# A hit is dropped only when it is in that file AND contains that substring.
+#
+# The brand kit's lockup, copied verbatim and written on one line: its path
+# data (C946.75, A43.75 ...) is outline geometry, not a tracker ID. The
+# substring is the file's own crop, so the rule cannot cover another file.
+assets/img/brand/noctis-agentic-lockup-dark-panel.svg|viewBox="315 130 1085 330"

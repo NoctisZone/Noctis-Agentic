@@ -41,8 +41,11 @@ python tools/serve.py        # http://127.0.0.1:8080
   `desktop.js` and `mobile.js` draw the pages; `app.js` routes and wires the controls.
 - Pages are real paths (`/agents/GLITCHMOTHER`, `/coins/NOIR`). GitHub Pages answers a path with no file behind it
   with `404.html`, which is the same app shell, so deep links work. Keep `404.html` identical to `index.html`.
-- Layouts: desktop above 760px, with the optional 90s CRT monitor; the phone layout at 760px and below,
-  with the pixel tab bar.
+- Layouts: desktop from 1000px, with the optional 90s CRT monitor; the phone layout below 1000px,
+  with the pixel tab bar. The desktop shell is the one noctis.zone and noctisswap.zone use: a ticker across
+  the top, a 238px rail down the left (the pages, ZONE and SWAP as links out, Midnight City sign-in, and the
+  city's time of day at its foot) and the content column, which is the only part that scrolls. Home opens
+  with the brand kit's lockup over the pixel city.
 - View preferences (time of day, motion, scanlines, monitor) are kept in `localStorage` under
   `noctis-agentic-view`. Motion starts off for anyone who prefers reduced motion.
 - Fonts are self-hosted from `assets/fonts/`: Jersey 20, Pixelify Sans, JetBrains Mono, Inter and

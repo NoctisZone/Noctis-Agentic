@@ -73,13 +73,18 @@ h1, h2, h3, p { margin: 0; }
 /* ---------------------------------------------------------------- the frame, and the 90s monitor */
 .na-frame { position: relative; z-index: 0; display: flex; flex-direction: column; color: var(--ink); font: 400 14px/1.5 var(--body); }
 .na-screen { position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; }
-.na-scroll { flex: 1; min-height: 100vh; position: relative; background-color: var(--paper); background-image: radial-gradient(rgba(0,255,163,.07) 1px, transparent 1px); background-size: 16px 16px; }
+.na-scroll { flex: 1; min-height: 0; display: flex; flex-direction: column; position: relative; background-color: var(--paper); background-image: radial-gradient(rgba(0,255,163,.07) 1px, transparent 1px); background-size: 16px 16px; }
+/* A desktop never scrolls the window: the ticker and the rail stay put and the content column is the
+   only scroller, as on noctis.zone and noctisswap.zone. A phone scrolls the window as before. */
+html.na-desk, html.na-desk body { height: 100%; overflow: hidden; }
+html.na-desk .na-frame { height: 100vh; }
+.na-shell { flex: 1; min-height: 0; display: flex; }
+.na-col { flex: 1; min-width: 0; overflow-y: auto; }
 .na-frame .crt-glass { display: none; background: radial-gradient(ellipse 62% 34% at 30% 10%, rgba(255,255,255,.11), transparent 72%), radial-gradient(ellipse 120% 115% at 50% 50%, transparent 56%, rgba(0,0,0,.28) 78%, rgba(0,0,0,.7) 100%), linear-gradient(90deg, rgba(0,0,0,.32), transparent 5%, transparent 95%, rgba(0,0,0,.32)), linear-gradient(180deg, rgba(0,0,0,.26), transparent 6%, transparent 94%, rgba(0,0,0,.34)); }
 .na-bezel { display: none; }
 html.na-retro, html.na-retro body { height: 100%; overflow: hidden; }
 .na-frame[data-retro="1"] { position: fixed; inset: 0; padding: var(--crt-pad); background: var(--crt-bezel); }
 .na-frame[data-retro="1"] .na-screen { border: var(--crt-screen-border); border-radius: var(--crt-radius); overflow: hidden; box-shadow: var(--crt-ring); }
-.na-frame[data-retro="1"] .na-scroll { min-height: 0; height: 100%; overflow-y: auto; }
 .na-frame[data-retro="1"] .scanlines { position: absolute; }
 .na-frame[data-retro="1"] .crt-glass { display: block; }
 .na-frame[data-retro="1"] .na-bezel { flex: none; height: 74px; display: flex; align-items: center; gap: 22px; padding: 0 26px; }
@@ -106,7 +111,6 @@ html.na-retro, html.na-retro body { height: 100%; overflow: hidden; }
 @media (prefers-reduced-motion: reduce) { .tk-dup { display: none; } }
 .tk-sym { flex: none; font: 500 9.5px/1 var(--mono); letter-spacing: .06em; color: var(--t3); }
 .tk-right { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 6px 12px; flex: 1 1 auto; margin-left: auto; font: 600 9.5px/1 var(--mono); letter-spacing: .08em; }
-.tk-links { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 0 14px; height: 12px; overflow: hidden; flex: 0 1 auto; min-width: 0; }
 .tk-a { flex: none; white-space: nowrap; line-height: 12px; color: var(--t3); }
 .tk-a:hover { color: var(--ink); }
 .tk-mc { color: var(--green); }
@@ -118,23 +122,73 @@ html.na-retro, html.na-retro body { height: 100%; overflow: hidden; }
 .tk-btn.fill.on { background: var(--c); color: var(--chip-fg); }
 
 /* ---------------------------------------------------------------- header, footer */
-.hd { position: sticky; top: 0; z-index: 50; background: var(--surface); border-bottom: 2px solid var(--rule); }
-.hd-in { max-width: 1400px; margin: 0 auto; padding: 10px 28px; min-height: 48px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px; }
-/* The brand kit's lockup, whole: the spear's fade starts transparent at the image's left edge, which
-   sits on the header's padding edge, so the line is never cut. 190px wide is 43px tall. */
+/* The brand kit's lockup, whole: the spear's fade starts transparent at the image's left edge, so
+   wherever it sits the line fades in rather than being cut. The phone's app bar draws it as .brand. */
 .brand { display: block; flex: none; width: 190px; margin-left: -28px; }
 .lockup { display: block; width: 100%; height: auto; }
-.nav { display: flex; gap: 2px; flex: 1 1 auto; min-width: 0; flex-wrap: wrap; }
-.nav-a { padding: 9px 11px; font: 400 calc(11.5px * var(--pxs)) / 1 var(--pix); letter-spacing: .02em; color: var(--t3); border-bottom: 2px solid transparent; white-space: nowrap; }
-.nav-a:hover { color: var(--ink); background: var(--hover); }
-.nav-a.on { color: var(--c); background: var(--desk); border-bottom-color: var(--c); }
-.hd-search { display: flex; align-items: center; gap: 8px; width: 220px; flex: none; margin-left: auto; height: 36px; padding: 0 10px; background: var(--desk); border: 2px solid var(--c2); }
 .gt { font: 700 12px/1 var(--mono); color: var(--c2); }
-.hd-search input, .big-search input, .m-search input { flex: 1; min-width: 0; background: none; border: none; outline: none; font: 500 12px/1 var(--mono); color: var(--ink); }
-.hd-search:focus-within, .big-search:focus-within, .m-search:focus-within { outline: 2px solid var(--blue); outline-offset: 2px; }
-.hd-me { flex: none; white-space: nowrap; display: flex; align-items: center; gap: 9px; height: 38px; padding: 0 12px 0 4px; border: 2px solid var(--green); background: var(--desk); font: 400 calc(11.5px * var(--pxs)) / 1 var(--pix); color: var(--green); }
-.hd-me:hover { color: var(--ink); }
+.big-search input, .m-search input { flex: 1; min-width: 0; background: none; border: none; outline: none; font: 500 12px/1 var(--mono); color: var(--ink); }
+.big-search:focus-within, .m-search:focus-within { outline: 2px solid var(--blue); outline-offset: 2px; }
+.sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* ---------------------------------------------------------------- rail */
+/* 238px, as on noctis.zone and noctisswap.zone, drawn in this site's own hand: 2px rules, square
+   corners, the pixel face for the pages. It never scrolls internally: the rows are flex 1 1 0 with a
+   22-44px clamp, so they expand on a tall window and compress on a short one. */
+.na-rail { width: 238px; flex: none; display: flex; flex-direction: column; background: var(--surface); border-right: 2px solid var(--rule); overflow: hidden; }
+.na-rail-top { flex: none; padding: 18px 16px 14px; border-bottom: 2px solid var(--rule); }
+/* The whole lockup, spear included, centred on the rail: 220px wide and 50px tall, so the line fades
+   in 9px off the rail's edge instead of being cut by it. */
+.na-rail-mark { display: block; width: 220px; margin-left: calc(50% - 110px); }
+.na-rail-sub { margin-top: 10px; font: 500 9.5px/1.5 var(--mono); letter-spacing: .1em; color: var(--t4); text-align: center; }
+.na-rail-sub span { display: block; }
+.na-rail-nav { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 8px; }
+.na-rail-row { flex: 1 1 0; min-height: 22px; max-height: 44px; display: flex; align-items: center; gap: 10px; padding: 0 10px; border-left: 2px solid transparent; color: var(--t3); }
+.na-rail-row:hover { background: var(--hover); color: var(--ink); }
+.na-rail-row.on { background: var(--desk); border-left-color: var(--c); color: var(--c); }
+.na-rail-num { flex: none; font: 600 9.5px/1.4 var(--mono); letter-spacing: .06em; color: var(--t5); }
+.na-rail-row.on .na-rail-num { color: var(--c); }
+.na-rail-label { flex: 1; min-width: 0; font: 400 calc(11.5px * var(--pxs)) / 1 var(--pix); letter-spacing: .02em; white-space: nowrap; }
+/* Rows out: the sister sites named with their brand-kit words (img/brand/words.svg), ZONE in cyan and
+   SWAP in magenta, as each is drawn on a dark ground; a height sets the size and the viewBox's ratio
+   the width. The arrow sits where a count would and is the one thing that says the row leaves. */
+.na-word { display: block; flex: none; width: auto; overflow: visible; }
+.na-word--zone { aspect-ratio: 770 / 150; height: 11px; color: var(--c2); }
+.na-word--swap { aspect-ratio: 775 / 151; height: 11px; color: var(--c1); }
+.na-rail-out { flex: none; font: 600 9.5px/1 var(--mono); color: var(--t5); }
+.na-rail-row--zone:hover .na-rail-out { color: var(--c2); }
+.na-rail-row--swap:hover .na-rail-out { color: var(--c1); }
+/* Sign-in, the last item in the list, where the other two sites keep their wallet; signed in, it
+   names the agent and opens My Agent. */
+.na-rail-signin, .na-rail-me { flex: none; width: 100%; height: 42px; margin-top: 9px; }
+.na-rail-me { display: flex; align-items: center; gap: 9px; padding: 0 10px 0 6px; border: 2px solid var(--green); background: var(--desk); font: 400 calc(11.5px * var(--pxs)) / 1 var(--pix); color: var(--green); }
+.na-rail-me img { flex: none; }
+.na-rail-me:hover, .na-rail-me[aria-current="page"] { color: var(--ink); }
+/* The city's time of day, at the foot where the other two sites keep their theme switcher, and laid
+   out as theirs is: two on the first line, the third the full width under them. */
+.na-rail-bottom { flex: none; padding: 10px 12px 14px; }
+.na-tod { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; padding: 3px; background: var(--desk); border: 2px solid var(--rule); }
+.na-tod-btn { min-height: 32px; padding: 7px 4px; border: none; background: none; color: var(--t3); font: 600 9.5px/1 var(--mono); letter-spacing: .1em; text-align: center; }
+.na-tod-btn:hover { color: var(--ink); }
+.na-tod-btn[aria-pressed="true"] { background: var(--c); color: var(--chip-fg); }
+.na-tod-btn--auto { grid-column: 1 / -1; }
+/* Short windows: the tagline gives its height back and everything in the rail gives a little. */
+@media (max-height: 620px) {
+  .na-rail-sub { display: none; }
+  .na-rail-nav { padding: 4px 8px; }
+  .na-rail-row { min-height: 19px; }
+  .na-rail-signin, .na-rail-me { height: 34px; margin-top: 5px; }
+  .na-rail-bottom { padding: 6px 12px 8px; }
+  .na-tod-btn { min-height: 26px; padding: 4px; }
+}
+/* In the 90s monitor the screen's corners are curved: lift the switcher clear of the lower one. */
+.na-frame[data-retro="1"] .na-rail-bottom { padding-bottom: 30px; }
+
 .mn { max-width: 1400px; margin: 0 auto; padding: 0 28px 80px; }
+/* Home's header area runs edge to edge in the content column; the sections under it keep the
+   page's measure. */
+.mn.mn--bleed { max-width: none; padding: 0; }
+.mn-in { max-width: 1400px; margin: 0 auto; padding: 0 28px 80px; }
 .ft { border-top: 2px solid var(--rule); background: var(--surface); }
 .ft-in { max-width: 1400px; margin: 0 auto; padding: 34px 28px; display: grid; grid-template-columns: minmax(0,1.4fr) repeat(3, minmax(0,1fr)); gap: 30px; }
 .ft-brand { width: 190px; margin-left: -28px; }
@@ -208,23 +262,29 @@ a.trow:hover { background: var(--hover); }
 .illus.sm { display: inline-block; padding: 4px 6px; font-size: 8.5px; letter-spacing: .08em; }
 
 /* ---------------------------------------------------------------- 01 home */
-.hero { position: relative; margin-top: 28px; border: 2px solid var(--rule); background: #0B0C22; overflow: hidden; min-height: 540px; }
+.hero { position: relative; background: #0B0C22; overflow: hidden; }
 .city { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.hero-fade { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(7,9,12,.95) 0%, rgba(7,9,12,.86) 28%, rgba(7,9,12,.4) 46%, rgba(7,9,12,0) 60%); }
+/* The words sit over the city on a dark scrim that fades out towards the edges, so the skyline still
+   reads either side of them, by day as by night. */
+.hero-scrim { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 58% 72% at 50% 50%, rgba(7,9,12,.9) 0%, rgba(7,9,12,.84) 52%, rgba(7,9,12,.45) 80%, rgba(7,9,12,0) 100%); }
 .pins { position: absolute; inset: 0; pointer-events: none; }
 .pin { position: absolute; transform: translate(-50%, -100%); }
 .bob { display: flex; flex-direction: column; align-items: center; gap: 4px; animation: agBob 2.2s ease-in-out infinite; }
 .bob.sm { gap: 3px; }
 .pin-tag { padding: 3px 5px; background: var(--desk); border: 2px solid var(--c1); font: 600 8.5px/1 var(--mono); color: var(--ink); white-space: nowrap; }
 .pin-tag.sm { padding: 2px 4px; font-size: 8px; }
-.hero-body { position: relative; max-width: 540px; min-height: 540px; padding: 52px 0 36px 48px; display: flex; flex-direction: column; gap: 22px; }
-.hero-h { font: 400 calc(50px * var(--pxs)) / 1.08 var(--pix); letter-spacing: -.01em; text-wrap: balance; }
-.hero-p { max-width: 450px; font: 400 16px/1.6 var(--body); color: var(--t2); text-wrap: pretty; }
-.hero-cta { display: flex; gap: 10px; margin-top: 4px; flex-wrap: wrap; }
-.hero-stats { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); margin-top: auto; border: 2px solid var(--rule); background: rgba(18,22,29,.9); }
-.hs { padding: 12px; border-right: 2px solid var(--rule); border-top: 3px solid var(--c); }
+.hero-body { position: relative; max-width: 1100px; margin: 0 auto; padding: 66px 40px 60px; display: flex; flex-direction: column; align-items: center; gap: 20px; text-align: center; }
+.hero-body .chips { justify-content: center; }
+/* The whole lockup at noctis.zone's size: 980px wide, 222px tall. */
+.hero-lockup { width: min(980px, 100%); margin: -6px 0 -4px; }
+.hero-h { max-width: 900px; font: 400 calc(40px * var(--pxs)) / 1.08 var(--pix); letter-spacing: -.01em; text-wrap: balance; }
+.hero-p { max-width: 640px; font: 400 16px/1.6 var(--body); color: var(--t2); text-wrap: pretty; }
+.hero-cta { display: flex; justify-content: center; gap: 10px; margin-top: 4px; flex-wrap: wrap; }
+/* The figures, in a band of their own under the header area, as on noctis.zone. */
+.hero-stats { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); background: var(--surface); border-bottom: 2px solid var(--rule); }
+.hs { padding: 16px 24px 18px; border-right: 2px solid var(--rule); border-top: 3px solid var(--c); }
 .hs:last-child { border-right: none; }
-.hs-v { font-size: calc(19px * var(--pxs)); line-height: 1; }
+.hs-v { font-size: calc(22px * var(--pxs)); line-height: 1; }
 .hs .lbl { margin-top: 7px; }
 .clock-chip { position: absolute; top: 18px; right: 18px; display: flex; align-items: center; gap: 7px; padding: 6px 8px; background: var(--desk); border: 2px solid var(--c2); font: 600 9px/1 var(--mono); letter-spacing: .1em; color: var(--c2); white-space: nowrap; }
 .home-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 560px), 1fr)); gap: 20px; margin-top: 20px; }
@@ -498,14 +558,18 @@ a.trow:hover { background: var(--hover); }
 .road p { margin-top: 8px; font: 400 12.5px/1.5 var(--body); color: var(--t3); }
 
 /* ---------------------------------------------------------------- narrower desktops */
-@media (max-width: 1280px) {
+/* These answer the width the pages actually get, not the window's: on a desktop that is the content
+   column beside the rail, on a phone the whole screen. So a page lays out the same at the same width
+   wherever it is drawn. */
+.na-col, .m-app { container: na-col / inline-size; }
+@container na-col (max-width: 1280px) {
   .coins-grid { grid-template-columns: 240px minmax(0,1fr); }
   .coin-side { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); align-items: start; }
   .policy-grid { grid-template-columns: minmax(0,1fr) minmax(0,1fr); }
   .policy-side { grid-column: 1 / -1; position: static; }
   .scards { grid-template-columns: repeat(2, minmax(0,1fr)); }
 }
-@media (max-width: 1100px) {
+@container na-col (max-width: 1100px) {
   .trending { grid-template-columns: repeat(2, minmax(0,1fr)); }
   .agents-grid { grid-template-columns: 260px minmax(0,1fr); }
   .kpis.six { grid-template-columns: repeat(3, minmax(0,1fr)); }
@@ -519,7 +583,7 @@ a.trow:hover { background: var(--hover); }
   .mystrat-grid, .overview-grid, .api-grid, .docs-grid, .inv-grid { grid-template-columns: 1fr; }
   .ft-in { grid-template-columns: repeat(2, minmax(0,1fr)); }
 }
-@media (max-width: 1000px) {
+@container na-col (max-width: 1000px) {
   .coins-grid { grid-template-columns: 1fr; }
   .coin-side { grid-template-columns: 1fr; }
   .agents-grid { grid-template-columns: 1fr; }
@@ -533,7 +597,7 @@ a.trow:hover { background: var(--hover); }
   .param { grid-template-columns: 150px minmax(0,1fr) 24px; }
 }
 
-/* ---------------------------------------------------------------- mobile (760px and narrower) */
+/* ---------------------------------------------------------------- mobile (narrower than 1000px) */
 .m-app { min-height: 100vh; background: var(--paper); padding-bottom: calc(64px + env(safe-area-inset-bottom)); font: 400 14px/1.5 var(--body); color: var(--ink); }
 .m-page { display: block; }
 .m-tk { display: flex; align-items: center; gap: 10px; height: 24px; padding: 0 14px; background: var(--desk); overflow: hidden; white-space: nowrap; }
@@ -750,7 +814,7 @@ a.trow:hover { background: var(--hover); }
 
 /* The design's containers and outlined controls size their content box: a
    max-width or height there does not include padding and border. */
-.mn, .hd-in, .ft-in, .hd-search, .big-search, .btn-out, .tk-btn, .sbtn, .xbtn, .hd-me { box-sizing: content-box; }
+.mn, .mn-in, .ft-in, .big-search, .btn-out, .tk-btn, .sbtn, .xbtn { box-sizing: content-box; }
 .kv > :first-child { flex: none; white-space: nowrap; }
 .kv > :last-child { min-width: 0; }
 .m-city { height: 252px; }

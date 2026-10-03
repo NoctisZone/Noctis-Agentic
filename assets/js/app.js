@@ -7,7 +7,9 @@ import * as M from './mobile.js';
 
 const root = document.getElementById('root');
 const html = document.documentElement;
-const mq = window.matchMedia('(max-width: 760px)');
+// The desktop starts at 1000px: the rail takes 238px, and from there the content column beside it is
+// as wide as the narrowest desktop page was before the rail. Below that, the phone layout.
+const mq = window.matchMedia('(max-width: 999px)');
 
 const S = {
   page: 'home',
@@ -73,8 +75,10 @@ function title() {
   if (S.page === 'coins' && S.route.id) t = '$' + S.coin;
   return (t ? t + ' · ' : '') + 'Noctis Agentic';
 }
+// On a desktop the content column is the only scroller, as on noctis.zone and noctisswap.zone: the
+// ticker and the rail stay put. A phone scrolls the window.
 function scroller() {
-  return !mq.matches && prefs.retro ? document.getElementById('scroll') : null;
+  return mq.matches ? null : document.getElementById('scroll');
 }
 function scrollToTop() {
   const s = scroller();
@@ -105,6 +109,7 @@ function render() {
   html.classList.toggle('na-still', !prefs.motion);
   html.classList.toggle('na-retro', !mobile && prefs.retro);
   html.classList.toggle('na-mobile', mobile);
+  html.classList.toggle('na-desk', !mobile);
   if (mobile) {
     root.innerHTML = `<div class="m-app">${M.mTicker()}<main class="m-page" id="main">${M.mPage(S)}</main>${M.mTabs(S.page)}</div>`;
   } else {
@@ -112,11 +117,15 @@ function render() {
   <div class="na-screen">
     <div class="scanlines" aria-hidden="true"${prefs.scan ? '' : ' hidden'}></div>
     <div class="crt-glass" aria-hidden="true"></div>
-    <div class="na-scroll" id="scroll">
+    <div class="na-scroll">
       <div id="tk">${D.ticker()}</div>
-      <div id="hd">${D.header(S)}</div>
-      <main class="mn" id="main">${D.PAGES[S.page](S)}</main>
-      ${D.footer()}
+      <div class="na-shell">
+        ${D.rail(S)}
+        <div class="na-col" id="scroll">
+          <main class="mn${S.page === 'home' ? ' mn--bleed' : ''}" id="main">${D.PAGES[S.page](S)}</main>
+          ${D.footer()}
+        </div>
+      </div>
     </div>
   </div>
   ${D.bezel()}
@@ -145,7 +154,7 @@ function renderMain() {
   const keep = document.getElementById('results');
   const listTop = keep ? keep.scrollTop : 0;
   main.innerHTML = mq.matches ? M.mPage(S) : D.PAGES[S.page](S);
-  if (!mq.matches) document.getElementById('hd').innerHTML = D.header(S);
+  if (!mq.matches) document.getElementById('rail').outerHTML = D.rail(S);
   document.title = title();
   const again = document.getElementById('results');
   if (again) again.scrollTop = listTop;
@@ -181,7 +190,7 @@ function setPref(k, v) {
   let y = 0;
   if (k === 'retro' && !mobile) {
     const s = scroller();
-    y = s ? s.scrollTop : window.scrollY;
+    y = s ? s.scrollTop : 0;
   }
   prefs[k] = v;
   savePrefs();
@@ -191,6 +200,7 @@ function setPref(k, v) {
     if (box) box.innerHTML = M.mView();
   } else {
     document.getElementById('tk').innerHTML = D.ticker();
+    document.getElementById('rail').outerHTML = D.rail(S);
     root.querySelector('.na-frame').dataset.retro = prefs.retro ? '1' : '0';
     root.querySelector('.scanlines').hidden = !prefs.scan;
     html.classList.toggle('na-retro', prefs.retro);
@@ -198,7 +208,6 @@ function setPref(k, v) {
       // Keep the reader's place when the page moves into or out of the screen.
       const s = scroller();
       if (s) s.scrollTop = y;
-      else window.scrollTo(0, y);
     }
   }
   if (k === 'tod' || k === 'motion') {

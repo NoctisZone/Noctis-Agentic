@@ -1,4 +1,4 @@
-// Mobile layout (760px and narrower): the eleven phone screens as real pages,
+// Mobile layout (narrower than 1000px): the eleven phone screens as real pages,
 // with the pixel tab bar. There is no retro monitor here.
 import {
   AGENTS, AG, COINS, HUE, RNG, FEE, FEE_ROWS, prefs, cityClock, esc, fmt, pct, signed, up, segBar, agentPath,

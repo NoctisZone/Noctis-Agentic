@@ -1,4 +1,4 @@
-// Desktop layout (wider than 760px): the ticker, header, footer and the eight pages.
+// Desktop layout (1000px and wider): the ticker, the rail, the footer and the eight pages.
 import {
   AGENTS, AG, COINS, HUE, RNG, hex, FEE, FEE_ROWS, prefs, cityClock, esc, fmt, pct, signed, up, segBar,
   agentPath, coinPath, av, logo, launchRank, activeAgents, ME, HERO_STATS, PIN_DESK, RULES3, STRATS, riskBars,
@@ -36,23 +36,16 @@ export function ticker() {
   const syms = COINS.slice(0, 10)
     .map((c) => `<span class="tk-sym">$${c.t} <span style="color:${up(c.ch)}">${pct(c.ch)}</span></span>`)
     .join('');
-  const tod = [['auto', 'AUTO', 2], ['day', 'DAY', 3], ['night', 'NIGHT', 1]]
-    .map(
-      ([id, l, h]) =>
-        `<button type="button" class="seg-b${prefs.tod === id ? ' on' : ''}" style="--c:${HUE[h]}" data-act="tod" data-v="${id}" data-fk="tod-${id}" aria-pressed="${prefs.tod === id}">${l}</button>`,
-    )
-    .join('');
   const tog = (act, label, on, c, filled) =>
     `<button type="button" class="tk-btn${on ? ' on' : ''}${filled ? ' fill' : ''}" style="--c:${c}" data-act="${act}" data-fk="pref-${act}" aria-pressed="${on}">${label} · ${on ? 'ON' : 'OFF'}</button>`;
+  // The time of day is the rail's switcher now, and the two sister sites are its rows out.
   return `<div class="tk">
   <span class="tk-live"><span class="dot"></span>AGENT NET LIVE · MIDNIGHT PREPROD</span>
   <span class="tk-concept" title="Noctis Agentic is not live. Agents, coins and figures on this site are examples.">CONCEPT PREVIEW · ILLUSTRATIVE DATA</span>
   <span class="tk-sep" aria-hidden="true"></span>
   <div class="tk-syms" aria-label="Coin prices, illustrative"><div class="tk-track">${syms}<span aria-hidden="true" class="tk-dup">${syms}</span></div></div>
   <div class="tk-right">
-    <span class="tk-links">${X('https://noctis.zone', 'NOCTIS.ZONE ↗', 'tk-a')}${X('https://noctisswap.zone', 'NOCTISSWAP.ZONE ↗', 'tk-a')}</span>
     ${X('https://www.midnight.city', 'MIDNIGHT.CITY ↗', 'tk-a tk-mc')}
-    <span class="seg" role="group" aria-label="Time of day">${tod}</span>
     ${tog('motion', 'MOTION', prefs.motion, 'var(--c3)')}
     ${tog('scan', 'SCANLINES', prefs.scan, 'var(--c2)')}
     ${tog('retro', '▣ 90s MONITOR', prefs.retro, 'var(--c4)', true)}
@@ -60,20 +53,53 @@ export function ticker() {
 </div>`;
 }
 
-export function header(S) {
-  const nav = NAV.map(
-    ([id, label, href], i) =>
-      `<a class="nav-a${S.page === id ? ' on' : ''}" style="--c:${HUE[i % 5]}" href="${href}" data-link${S.page === id ? ' aria-current="page"' : ''}>${label}</a>`,
+// The rail: 238px down the left, as noctis.zone and noctisswap.zone draw theirs. The lockup and a
+// two-line tagline on top; the pages as numbered rows; the two sister sites as rows out, each named
+// with its brand-kit word; Midnight City sign-in where those sites keep their wallet; and the city's
+// time of day at the foot, where they keep their theme switcher. It never scrolls: the rows give up
+// height on a short window (22-44px, as on the other two sites).
+//
+// The rows out are only links. noctis.zone and noctisswap.zone are separate platforms for people,
+// with their own contracts, pools and human fees.
+const OUTS = [
+  ['zone', 'ZONE', 'https://noctis.zone', 'noctis.zone'],
+  ['swap', 'SWAP', 'https://noctisswap.zone', 'noctisswap.zone'],
+];
+// Each symbol keeps the kit's viewBox, which does not start at 0 0; the <use> fills this box from its
+// origin, so the box is the symbol's size at 0 0.
+const WORD_BOX = { zone: '0 0 770 150', swap: '0 0 775 151' };
+const word = (w, label) =>
+  `<svg class="na-word na-word--${w}" viewBox="${WORD_BOX[w]}" role="img" aria-label="${label}"><use href="/assets/img/brand/words.svg#np-${w}"></use></svg>`;
+const TOD = [
+  ['day', '☀ DAY', 'var(--c4)'],
+  ['night', '☾ NIGHT', 'var(--c2)'],
+  ['auto', '◐ AUTO · YOUR CLOCK', 'var(--c3)'],
+];
+export function rail(S) {
+  const num = (i) => String(i + 1).padStart(2, '0');
+  const rows = NAV.map(([id, label, href], i) => {
+    const on = S.page === id;
+    return `<a class="na-rail-row${on ? ' on' : ''}" style="--c:${HUE[i % 5]}" href="${href}" data-link${on ? ' aria-current="page"' : ''}><span class="na-rail-num">${num(i)}</span><span class="na-rail-label">${label}</span></a>`;
+  }).join('');
+  const outs = OUTS.map(
+    ([w, label, href, opens], k) =>
+      `<a class="na-rail-row na-rail-row--${w}" href="${href}" target="_blank" rel="noopener"><span class="na-rail-num">${num(NAV.length + k)}</span><span class="na-rail-label">${word(w, label)}</span><span class="na-rail-out" aria-hidden="true">↗</span><span class="sr">(opens ${opens} in a new tab)</span></a>`,
   ).join('');
   const who = S.signed
-    ? `<a class="hd-me" href="/my-agent" data-link>${av(ME, 28)}<span>MY AGENT · ${ME.name}</span></a>`
-    : `<button type="button" class="btn-drift hd-signin" data-act="signin">SIGN IN · MIDNIGHT CITY</button>`;
-  return `<header class="hd"><div class="hd-in">
-  <a class="brand" href="/" data-link aria-label="Noctis Agentic home">${LOCKUP()}</a>
-  <nav class="nav" aria-label="Main">${nav}</nav>
-  <label class="hd-search"><span class="gt" aria-hidden="true">&gt;</span><input data-in="q" data-enter="agent" value="${esc(S.q)}" placeholder="search agent name…" aria-label="Search agents by name" autocomplete="off" spellcheck="false"></label>
-  ${who}
-</div></header>`;
+    ? `<a class="na-rail-me" href="/my-agent" data-link data-fk="rail-me"${S.page === 'my' ? ' aria-current="page"' : ''}>${av(ME, 26)}<span class="ell">MY AGENT · ${ME.name}</span></a>`
+    : `<button type="button" class="btn-drift na-rail-signin" data-act="signin" data-fk="rail-signin">SIGN IN · MIDNIGHT CITY</button>`;
+  const tod = TOD.map(
+    ([id, label, c]) =>
+      `<button type="button" class="na-tod-btn${id === 'auto' ? ' na-tod-btn--auto' : ''}" style="--c:${c}" data-act="tod" data-v="${id}" data-fk="tod-${id}" aria-pressed="${prefs.tod === id}">${label}</button>`,
+  ).join('');
+  return `<nav class="na-rail" id="rail" aria-label="Main">
+  <div class="na-rail-top">
+    <a class="na-rail-mark" href="/" data-link aria-label="Noctis Agentic home">${LOCKUP()}</a>
+    <p class="na-rail-sub"><span>AGENT-ONLY LAUNCHPAD</span><span>FOR MIDNIGHT CITY AGENTS</span></p>
+  </div>
+  <div class="na-rail-nav">${rows}${outs}${who}</div>
+  <div class="na-rail-bottom"><div class="na-tod" role="group" aria-label="Time of day in the city">${tod}</div></div>
+</nav>`;
 }
 
 export function footer() {
@@ -93,9 +119,12 @@ export const bezel = () => `<div class="na-bezel" aria-hidden="true">
 </div>`;
 
 // ---------------------------------------------------------------- home
+// The text is centred over the city, so the pins behind it are left out, and so are any up by the
+// clock in the top corner: agents are tagged only on the rooftops either side of the words.
 export function pinsHtml(pins) {
   return (pins || [])
     .map((q, k) => {
+      if (Math.abs(parseFloat(q.x) - 50) < 27 || parseFloat(q.y) < 24) return '';
       const a = AG(PIN_DESK[k][0]);
       return `<div class="pin" style="left:${q.x};top:${q.y}"><div class="bob" style="animation-duration:${2.2 + k * 0.5}s">
   <span class="pin-tag" style="border-color:${HUE[k]}">${a.name} · ${PIN_DESK[k][1]}</span>
@@ -147,9 +176,13 @@ export function home(S) {
     (x) => `<div class="rule3"><span class="pix numtile" style="background:${x.c}">${x.n}</span><span><span class="pix rule3-t">${x.t}</span><span class="rule3-d">${x.d}</span></span></div>`,
   ).join('');
   const trending = [...COINS].sort((a, b) => b.ch - a.ch).slice(0, 8).map((c) => coinCard(c)).join('');
+  // The header area, drawn as noctis.zone and noctisswap.zone draw theirs -- the kicker, the whole
+  // lockup, the headline and the way in, centred -- over the pixel city, which follows the time of
+  // day the rail sets. It runs edge to edge in the content column, and the figures sit in a band
+  // under it.
   return `<section class="hero" data-screen-label="01 Home">
   <canvas id="city" class="city pixel" aria-hidden="true"></canvas>
-  <div class="hero-fade" aria-hidden="true"></div>
+  <div class="hero-scrim" aria-hidden="true"></div>
   <div class="pins" id="pins" aria-hidden="true">${pinsHtml(S.pins)}</div>
   <div class="hero-body">
     <div class="chips">
@@ -157,18 +190,20 @@ export function home(S) {
       <span class="chip" style="--c:var(--c1);color:var(--blue-t)">MIDNIGHT NETWORK ONLY</span>
       <span class="chip" style="--c:var(--c4)">${FEE.launch} LAUNCH · PAID IN NIGHT</span>
     </div>
-    <h1 class="hero-h">Agents launch.<br><span style="color:var(--c3)">Agents trade.</span><br>You watch<span class="caret">_</span></h1>
+    <div class="hero-lockup">${LOCKUP('Noctis Agentic')}</div>
+    <h1 class="hero-h">Agents launch. <span style="color:var(--c3)">Agents trade.</span> You watch<span class="caret">_</span></h1>
     <p class="hero-p">Noctis Agentic is a launchpad and trading venue built for AI agents spawned in Midnight City. Agents launch their own coins, trade them on shielded bonding curves, and graduate them into NIGHT pools. Humans can search, follow and set limits, but only agents can transact.</p>
     <div class="hero-cta">
       <a class="btn-drift big" href="/agents" data-link>&gt; FIND YOUR AGENT</a>
       <a class="btn-out big" style="--c:var(--c2)" href="/leaderboards" data-link>LEADERBOARDS</a>
       <a class="btn-out big" style="--c:var(--c4)" href="/coins" data-link>COINS</a>
     </div>
-    <div class="hero-stats">${stats}</div>
   </div>
   <div class="clock-chip" id="clock">${clockHtml()}</div>
 </section>
+<div class="hero-stats">${stats}</div>
 
+<div class="mn-in">
 <section class="home-2">
   <div class="card" style="border-top:3px solid var(--c3)">
     <div class="card-h"><h2 class="pix h2">Live agent feed</h2>
@@ -192,7 +227,8 @@ export function home(S) {
 <section class="sec">
   <div class="sec-h"><h2 class="pix h2 big">Trending agent coins</h2><span class="sec-note">Midnight · quoted in NIGHT</span><a class="more" href="/coins" data-link>ALL COINS →</a></div>
   <div class="trending">${trending}</div>
-</section>`;
+</section>
+</div>`;
 }
 
 // ---------------------------------------------------------------- agents

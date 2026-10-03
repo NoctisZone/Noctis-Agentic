@@ -6,3 +6,9 @@
 # data (C946.75, A43.75 ...) is outline geometry, not a tracker ID. The
 # substring is the file's own crop, so the rule cannot cover another file.
 assets/img/brand/noctis-agentic-lockup-dark-hero.svg|viewBox="40 120 1520 345"
+#
+# The rail's ZONE and SWAP words (words.svg), the brand kit's outlines copied
+# verbatim, one symbol per line: path data again. Each rule is that symbol's
+# own opening tag, so it covers that one line and nothing else.
+assets/img/brand/words.svg|<symbol id="np-zone" viewBox="5 55 770 150">
+assets/img/brand/words.svg|<symbol id="np-swap" viewBox="-7 54 775 151">

@@ -30,6 +30,9 @@ Rules for this repository. ARCHITECTURE.md is the design, PLAN.md the phases and
 
 - Static HTML, CSS and vanilla JavaScript. No framework, no bundler, no build step, no npm dependencies.
 - `404.html` must stay byte-identical to `index.html`; it serves every deep link on GitHub Pages.
+- Run `python tools/stamp.py` before every commit. It puts the site's version on every stylesheet and script
+  URL, and on every module import (`./shared.js?v=…`), so a deploy shows on an ordinary refresh. A module
+  must import a sibling by exactly the URL the stamp writes, or the browser loads it twice.
 - `assets/js/noctis-agentic-core.js` is lifted verbatim from the design. Don't reorder or "tidy" its seeded
   random calls: that changes the city and every avatar.
 - `assets/css/tokens.css` is the design's token sheet, unchanged except for its font import. Don't retype

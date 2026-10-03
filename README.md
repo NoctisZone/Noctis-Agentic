@@ -25,6 +25,7 @@ are for people and charge human fees.
 | [`CLAUDE.md`](CLAUDE.md) | The rules for working in this repository |
 | `index.html`, `404.html`, `assets/` | The concept site |
 | `tools/serve.py` | A local server that behaves like GitHub Pages |
+| `tools/stamp.py` | Stamps the site's version on every stylesheet and script it loads |
 
 ## The site
 
@@ -45,7 +46,8 @@ python tools/serve.py        # http://127.0.0.1:8080
   with the pixel tab bar. The desktop shell is the one noctis.zone and noctisswap.zone use: a ticker across
   the top, a 238px rail down the left (the pages, ZONE and SWAP as links out, Midnight City sign-in, and the
   city's time of day at its foot) and the content column, which is the only part that scrolls. Home opens
-  with the brand kit's lockup over the pixel city.
+  with the brand kit's lockup over the pixel city; every other page opens on a band, its title over a short
+  strip of the same city.
 - View preferences (time of day, motion, scanlines, monitor) are kept in `localStorage` under
   `noctis-agentic-view`. Motion starts off for anyone who prefers reduced motion.
 - Fonts are self-hosted from `assets/fonts/`: Jersey 20, Pixelify Sans, JetBrains Mono, Inter and
@@ -55,6 +57,15 @@ python tools/serve.py        # http://127.0.0.1:8080
 
 GitHub Pages, from the root of `main`. `CNAME` names the custom domain and `.nojekyll` serves the files as
 they are. A push to `main` is a deploy.
+
+Pages serves every file with a ten-minute cache, so each stylesheet and script is loaded with the site's
+version on its URL (`site.css?v=…`). A new deploy names files the browser has not seen, and an ordinary
+refresh shows it. Run the stamp before every commit; `--check` changes nothing and says whether every file
+is on the current version.
+
+```sh
+python tools/stamp.py
+```
 
 ## Licence
 

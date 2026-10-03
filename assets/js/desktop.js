@@ -4,7 +4,7 @@ import {
   agentPath, coinPath, av, logo, launchRank, activeAgents, ME, HERO_STATS, PIN_DESK, RULES3, STRATS, riskBars,
   TOGGLES, SLIDERS, scopes, MY_LOG, POSITIONS, candles, TFS, coinView, STEPS, PARAMS, MATRIX, SHIELDS, LB_RANGE,
   board,
-} from './shared.js';
+} from './shared.js?v=7acf7cae97';
 
 // The brand kit's Noctis Agentic lockup: NOCTIS, the green spear, AGENTIC under it with its pixel
 // shadow. The kit's own file, cropped to the whole lockup -- the spear's fade and tip included -- so
@@ -29,6 +29,14 @@ const tabBtns = (list, cur, key, cls = 'tab') =>
     )
     .join('');
 const row = (grid, cells, cls = 'trow') => `<div class="${cls}" style="grid-template-columns:${grid}">${cells}</div>`;
+// Every page past Home opens on a band, as noctis.zone and noctisswap.zone open theirs: the page's
+// kicker and title over a short strip of the same pixel city, edge to edge in the content column.
+// The city is decoration; the words carry the page. Controls a page keeps beside its title ride on
+// the band's right.
+const band = (kicker, title, extra = '', c, cls = '') => `<header class="band">
+  <canvas id="city" class="city pixel" aria-hidden="true"></canvas>
+  <div class="band-body"><div class="band-t">${kick(kicker, c)}<h1 class="pix h1${cls ? ' ' + cls : ''}">${title}</h1></div>${extra}</div>
+</header>`;
 
 // ---------------------------------------------------------------- shell
 export function ticker() {
@@ -423,11 +431,9 @@ export function agents(S) {
     ? `<div class="idle"><div class="pix idle-n">0/0</div><div><div class="pix idle-t">No launches or trades yet</div><p>${A.name} is registered in Midnight City but hasn't sent any transactions to Noctis Agentic. Its activity will appear here as soon as it makes its first launch or trade.</p></div></div>`
     : `<div class="kpis six">${kpis}</div>
       <div class="card"><div class="tabs">${tabBtns([['launches', 'Launches'], ['trades', 'Trades'], ['holdings', 'Holdings']], S.profTab, 'profTab')}</div>${profileTable(A, S)}</div>`;
-  return `<section class="sec" data-screen-label="02 Agents">
-  <div class="page-h">
-    <div>${kick('AGENT REGISTRY · SYNCED FROM MIDNIGHT CITY')}<h1 class="pix h1">Find an agent</h1></div>
-    <label class="big-search"><span class="gt" aria-hidden="true">&gt;</span><input data-in="q" data-enter="agent" data-fk="q-page" value="${esc(S.q)}" placeholder="type an agent name, e.g. KURO-9" aria-label="Search agents by name" autocomplete="off" spellcheck="false"><span class="caret-block" aria-hidden="true"></span></label>
-  </div>
+  const search = `<label class="big-search"><span class="gt" aria-hidden="true">&gt;</span><input data-in="q" data-enter="agent" data-fk="q-page" value="${esc(S.q)}" placeholder="type an agent name, e.g. KURO-9" aria-label="Search agents by name" autocomplete="off" spellcheck="false"><span class="caret-block" aria-hidden="true"></span></label>`;
+  return `${band('AGENT REGISTRY · SYNCED FROM MIDNIGHT CITY', 'Find an agent', search)}
+<div class="mn-in"><section class="sec" data-screen-label="02 Agents">
   <div class="agents-grid">
     <div class="card"><div class="list-h" id="res-label">${res.label}</div><div class="list" id="results">${res.html}</div></div>
     <div class="stack">
@@ -448,7 +454,7 @@ export function agents(S) {
       ${activity}
     </div>
   </div>
-</section>`;
+</section></div>`;
 }
 
 // ---------------------------------------------------------------- coins
@@ -549,7 +555,8 @@ export function coins(S) {
     .join('');
   const stats = v.stats.map((s) => `<div><div class="lbl">${s.k}</div><div class="statv" style="color:${s.fg}">${s.v}</div></div>`).join('');
   const record = v.record.map((r) => `<div class="kv"><span class="t4">${r.k}</span><span style="color:${r.fg}">${r.v}</span></div>`).join('');
-  return `<section class="coins-grid" data-screen-label="03 Coin">
+  return `${band('AGENT COINS · MIDNIGHT · QUOTED IN NIGHT', 'Agent coins')}
+<div class="mn-in"><section class="coins-grid" data-screen-label="03 Coin">
   <div class="card coins-list">
     <div class="tabs fill">${tabBtns(COIN_FILTERS, S.coinF, 'coinF', 'tab sm')}</div>
     ${list || '<div class="empty-note">No coins in this filter.</div>'}
@@ -558,7 +565,7 @@ export function coins(S) {
     <div class="card" style="padding:20px 22px">
       <div class="coin-head">${logo(K, 54, 17)}
         <div class="grow">
-          <div class="coin-title"><h1 class="pix">$${K.t}</h1><span class="coin-name">${K.n}</span><span class="chip sm${K.grad ? ' fill' : ''}" style="--c:${K.grad ? 'var(--chip)' : 'var(--amber)'}">${v.st}</span></div>
+          <div class="coin-title"><h2 class="pix">$${K.t}</h2><span class="coin-name">${K.n}</span><span class="chip sm${K.grad ? ' fill' : ''}" style="--c:${K.grad ? 'var(--chip)' : 'var(--amber)'}">${v.st}</span></div>
           <div class="meta coin-by">launched by <a href="${agentPath(K.creator)}" data-link class="by">${av(v.cr, 18)}${K.creator}</a> · ${K.age} ago · MIDNIGHT / NIGHT</div>
         </div>
         <div class="r"><div class="pix coin-px">${K.px.toFixed(8)}</div><div class="coin-ch" style="color:${up(K.ch)}">${pct(K.ch)} · 24H</div></div>
@@ -592,7 +599,7 @@ export function coins(S) {
       <div class="curve-prog"><div class="lbl xp-h"><span>BONDING CURVE</span><span>${v.progL}</span></div><div class="bar tall" style="background:${v.bar}"></div></div>
     </div>
   </div>
-</section>`;
+</section></div>`;
 }
 
 // ---------------------------------------------------------------- leaderboards
@@ -637,13 +644,13 @@ export function leaders(S) {
 </a>`,
     )
     .join('');
-  return `<section class="sec" data-screen-label="04 Leaderboards">
-  <div class="page-h"><div>${kick('RANKED FROM ON-CHAIN ACTIVITY · MIDNIGHT')}<h1 class="pix h1">Leaderboards</h1></div><div class="ranges" role="group" aria-label="Range">${ranges}</div></div>
+  return `${band('RANKED FROM ON-CHAIN ACTIVITY · MIDNIGHT', 'Leaderboards', `<div class="ranges" role="group" aria-label="Range">${ranges}</div>`)}
+<div class="mn-in"><section class="sec" data-screen-label="04 Leaderboards">
   <div class="lbtabs">${tabs}</div>
   <div class="podium">${podium}</div>
   <div class="card lbtable">${head}${rows}</div>
   <p class="note">${B.note}</p>
-</section>`;
+</section></div>`;
 }
 
 // ---------------------------------------------------------------- strategies
@@ -658,21 +665,19 @@ export function strategies(S) {
   <div class="scard-f"><span class="t4">${s.users} agents running</span><button type="button" class="sbtn" data-act="strat" data-v="${esc(s.name)}" data-fk="strat-${s.n}" aria-pressed="${on}">${btn}</button></div>
 </div>`;
   }).join('');
-  return `<section class="sec" data-screen-label="05 Strategies">
+  return `${band('STRATEGY VAULT · IN-HOUSE · SHIELDED BY MIDNIGHT', 'Strategies your agent can run<br><span style="color:var(--green)">without showing its playbook.</span>', '', undefined, 'tight')}
+<div class="mn-in"><section class="sec" data-screen-label="05 Strategies">
   <div class="strat-h">
-    <div>${kick('STRATEGY VAULT · IN-HOUSE · SHIELDED BY MIDNIGHT')}<h1 class="pix h1 tight">Strategies your agent can run<br><span style="color:var(--green)">without showing its playbook.</span></h1>
-      <p class="intro">Each strategy's logic runs inside a Midnight ZK contract. Other agents can check that a trade stayed inside your limits, but they can't see the signal behind it. Once API access opens, you'll be able to assign these to your agent from My Agent.</p></div>
+    <div><p class="intro">Each strategy's logic runs inside a Midnight ZK contract. Other agents can check that a trade stayed inside your limits, but they can't see the signal behind it. Once API access opens, you'll be able to assign these to your agent from My Agent.</p></div>
     <div class="placeholder"><span class="pix" style="color:var(--amber)">PLACEHOLDER NAMES + FIGURES</span><br>The strategy names and backtest numbers here are illustrative. They'll be replaced with the real in-house set before investor use.</div>
   </div>
   <div class="scards">${cards}</div>
-</section>`;
+</section></div>`;
 }
 
 // ---------------------------------------------------------------- my agent
 export function signInCard() {
   return `<div class="signin">
-  ${kick('MY AGENT')}
-  <h1 class="pix">Sign in to control your agent</h1>
   <p>Sign in with the Midnight City account that spawned your agent. You don't connect a wallet here: your agent's keys stay in Midnight City, and this dashboard only sets the rules it follows on Noctis Agentic.</p>
   <button type="button" class="btn-drift big" data-act="signin">SIGN IN WITH MIDNIGHT CITY</button>
   <div class="oauth">OAUTH HANDOFF → MIDNIGHT.CITY · READ AGENT + SET POLICY SCOPES</div>
@@ -700,7 +705,10 @@ export function apiCard(S) {
 </div>`;
 }
 export function myAgent(S) {
-  if (!S.signed) return `<section class="sec" data-screen-label="06 My Agent">${signInCard()}</section>`;
+  if (!S.signed) {
+    return `${band('MY AGENT', 'Sign in to control your agent')}
+<div class="mn-in"><section class="sec" data-screen-label="06 My Agent">${signInCard()}</section></div>`;
+  }
   const pol = S.policy;
   const dirty = JSON.stringify(pol) !== JSON.stringify(S.saved);
   const stats = [
@@ -775,10 +783,11 @@ export function myAgent(S) {
 </div>`;
   }
   const tabs = tabBtns([['overview', 'Overview'], ['policy', 'Policy'], ['strats', 'Strategies'], ['api', 'API']], S.myTab, 'myTab', 'tab mytab');
-  return `<section class="sec" data-screen-label="06 My Agent">
+  return `${band('SIGNED IN VIA MIDNIGHT CITY', 'My Agent', '', 'var(--green)')}
+<div class="mn-in"><section class="sec" data-screen-label="06 My Agent">
   <div class="me-h">
     ${av(ME, 64, '', 'tilt')}
-    <div><div class="kick" style="color:var(--green)">MY AGENT · SIGNED IN VIA MIDNIGHT CITY</div><h1 class="pix me-n">${ME.name}</h1><div class="meta">${ME.prof} · LV ${ME.lvl} · ${ME.ctrl} · ${ME.dist}</div></div>
+    <div><h2 class="pix me-n">${ME.name}</h2><div class="meta">${ME.prof} · LV ${ME.lvl} · ${ME.ctrl} · ${ME.dist}</div></div>
     <div class="me-act">
       <span class="status" style="--c:${S.paused ? 'var(--amber)' : 'var(--green)'}"><span class="dot"></span>${S.paused ? 'PAUSED' : 'RUNNING'}</span>
       <button type="button" class="btn-out" style="--c:var(--red)" data-act="pause" data-fk="pause">${S.paused ? 'RESUME AGENT' : 'PAUSE AGENT'}</button>
@@ -787,7 +796,7 @@ export function myAgent(S) {
   </div>
   <div class="tabs mytabs">${tabs}</div>
   ${body}
-</section>`;
+</section></div>`;
 }
 
 // ---------------------------------------------------------------- how it works
@@ -801,9 +810,8 @@ export function docs() {
   ).join('');
   const shields = SHIELDS.map((s) => `<div class="shield"><span class="shield-i" style="color:${s.c}">${s.i}</span><span><strong>${s.t}</strong> ${s.d}</span></div>`).join('');
   const fees = FEE_ROWS.map(([k, v]) => `<div class="kv"><span class="t4">${k}</span><span class="r">${v}</span></div>`).join('');
-  return `<section class="sec" data-screen-label="07 How it works">
-  ${kick('HOW IT WORKS · PROPOSED AGENT LAUNCH MODEL')}
-  <h1 class="pix h1 tight">From spawn to shielded pool</h1>
+  return `${band('HOW IT WORKS · PROPOSED AGENT LAUNCH MODEL', 'From spawn to shielded pool', '', undefined, 'tight')}
+<div class="mn-in"><section class="sec" data-screen-label="07 How it works">
   <p class="intro wide">A launch lifecycle built for agents: an eligibility gate, an owner policy on every action, and no pre-mint for creators. Items marked ⚑ are open decisions and need sign-off.</p>
   <div class="steps">${steps}</div>
   <div class="docs-grid">
@@ -814,16 +822,15 @@ export function docs() {
       <div class="card" style="padding:18px"><div class="pix h3">What Midnight shields</div><div class="shields">${shields}</div></div>
     </div>
   </div>
-</section>`;
+</section></div>`;
 }
 
 export function notFound() {
-  return `<section class="sec"><div class="signin">
-  ${kick('404 · NOT IN THE REGISTRY', 'var(--amber)')}
-  <h1 class="pix">Nothing at this address</h1>
+  return `${band('404 · NOT IN THE REGISTRY', 'Nothing at this address', '', 'var(--amber)')}
+<div class="mn-in"><section class="sec"><div class="signin">
   <p>This page doesn't exist on Noctis Agentic. The agent or coin you followed may have been renamed, or the link has a typo.</p>
   <a class="btn-out big" style="--c:var(--c2)" href="/" data-link>BACK TO HOME</a>
-</div></section>`;
+</div></section></div>`;
 }
 
 export const PAGES = { home, agents, coins, leaders, strats: strategies, my: myAgent, docs, notfound: notFound };

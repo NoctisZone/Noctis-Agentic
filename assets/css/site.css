@@ -331,6 +331,19 @@ a.trow:hover { background: var(--hover); }
 .tcard-bar { display: block; height: 10px; margin-top: 7px; }
 .na-still .tcard, .na-still .tcard:hover { transition: none; }
 
+/* ---------------------------------------------------------------- the band on every other page */
+/* The page's kicker and title over a short strip of the same city, edge to edge in the content
+   column; the band's words line up with the page's measure under it. The title takes the header
+   area's outline and hard offset, and the kicker sits on the desk's fill, as the clock chip does, so
+   both read over the bright day sky as over the night one. */
+.band { position: relative; background: #0B0C22; overflow: hidden; border-bottom: 2px solid var(--rule); }
+.band-body { --hs: #07090C; --ho: -1px -1px 0 var(--hs), 1px -1px 0 var(--hs), -1px 1px 0 var(--hs), 1px 1px 0 var(--hs);
+  position: relative; max-width: 1400px; min-height: 120px; margin: 0 auto; padding: 36px 28px 26px; display: flex; align-items: flex-end; flex-wrap: wrap; gap: 20px; }
+.band-body > :last-child:not(:first-child) { margin-left: auto; }
+.band .kick { display: inline-block; padding: 5px 7px; background: var(--desk); border: 2px solid currentColor; }
+.band .h1 { color: var(--ink); text-shadow: var(--ho), 3px 3px 0 var(--hs); }
+.band .ranges { background: var(--desk); }
+
 /* ---------------------------------------------------------------- 02 agents */
 .big-search { display: flex; align-items: center; gap: 10px; width: 460px; max-width: 100%; height: 50px; padding: 0 14px; background: var(--desk); border: 2px solid var(--green); }
 .big-search .gt { font-size: 16px; color: var(--green); }
@@ -367,7 +380,7 @@ a.trow:hover { background: var(--hover); }
 .ch { font: 600 11px/1 var(--mono); }
 .coin-head { display: flex; align-items: center; gap: 14px; }
 .coin-title { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.coin-title h1 { font-size: calc(26px * var(--pxs)); line-height: 1; }
+.coin-title h2 { font-size: calc(26px * var(--pxs)); line-height: 1; }
 .coin-name { font: 500 13px/1 var(--body); color: var(--t3); }
 .coin-by { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .by { display: inline-flex; align-items: center; gap: 6px; color: var(--green); }
@@ -447,13 +460,11 @@ a.trow:hover { background: var(--hover); }
 
 /* ---------------------------------------------------------------- 06 my agent */
 .signin { max-width: 560px; margin: 60px auto 0; border: 2px solid var(--rule-strong); background: var(--surface); padding: 36px; text-align: center; display: flex; flex-direction: column; align-items: center; }
-.signin h1 { margin-top: 14px; font-size: calc(28px * var(--pxs)); line-height: 1.15; text-wrap: balance; }
-.signin p { margin-top: 14px; max-width: 420px; font: 400 14px/1.6 var(--body); color: var(--t3); }
+.signin p { max-width: 420px; font: 400 14px/1.6 var(--body); color: var(--t3); }
 .signin .btn-drift, .signin .btn-out { margin-top: 24px; }
 .oauth { margin-top: 16px; font: 500 10px/1.4 var(--mono); color: var(--t5); }
 .me-h { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; padding: 20px 22px; border: 2px solid var(--green); background: var(--surface); }
-.me-h .kick { color: var(--green); }
-.me-n { margin-top: 8px; font-size: calc(28px * var(--pxs)); line-height: 1; }
+.me-n { font-size: calc(28px * var(--pxs)); line-height: 1; }
 .me-act { margin-left: auto; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .status { display: flex; align-items: center; gap: 7px; padding: 8px 10px; border: 2px solid var(--c); font: 700 10px/1 var(--mono); letter-spacing: .1em; color: var(--c); }
 .status .dot { width: 7px; height: 7px; background: var(--c); }
@@ -645,8 +656,15 @@ a.trow:hover { background: var(--hover); }
 .m-ft p { margin-top: 10px; font: 400 12.5px/1.55 var(--body); color: var(--t4); }
 .m-ft-links { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 10px; font: 500 12px/1 var(--mono); }
 .m-ft-links a { display: inline-flex; align-items: center; min-height: 32px; color: var(--t3); }
+/* A page's head is a band over the city, as on the desktop; its controls follow in a bar under it. */
+.m-band { position: relative; background: #0B0C22; overflow: hidden; border-bottom: 2px solid var(--rule); }
+.m-band-body { --hs: #07090C; --ho: -1px -1px 0 var(--hs), 1px -1px 0 var(--hs), -1px 1px 0 var(--hs), 1px 1px 0 var(--hs);
+  position: relative; min-height: 104px; padding: 26px 14px 16px; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start; }
+.m-band .kick { padding: 4px 6px; background: var(--desk); border: 2px solid currentColor; color: var(--blue-t); }
 .m-head { padding: 14px; background: var(--surface); border-bottom: 2px solid var(--rule); }
+.m-head > :first-child { margin-top: 0; }
 .m-h1 { margin-top: 6px; font-size: 30px; line-height: 1; text-wrap: balance; }
+.m-band .m-h1 { color: var(--ink); text-shadow: var(--ho), 3px 3px 0 var(--hs); }
 .m-bar { display: flex; align-items: center; gap: 10px; height: 52px; padding: 0 14px; background: var(--surface); border-bottom: 2px solid var(--rule); }
 .m-back { display: flex; align-items: center; gap: 10px; min-height: 44px; color: var(--ink); }
 .m-back .chev { font: 700 16px/1 var(--mono); color: var(--c2); }
@@ -798,7 +816,7 @@ a.trow:hover { background: var(--hover); }
 
 /* The design's containers and outlined controls size their content box: a
    max-width or height there does not include padding and border. */
-.mn, .mn-in, .ft-in, .big-search, .btn-out, .tk-btn, .sbtn, .xbtn { box-sizing: content-box; }
+.mn, .mn-in, .band-body, .ft-in, .big-search, .btn-out, .tk-btn, .sbtn, .xbtn { box-sizing: content-box; }
 .kv > :first-child { flex: none; white-space: nowrap; }
 .kv > :last-child { min-width: 0; }
 

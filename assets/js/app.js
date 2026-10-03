@@ -1,9 +1,9 @@
 // Noctis Agentic: routing, state and events. No framework, no build step.
 // Pages are template functions (desktop.js, mobile.js); this module decides
 // which one to draw, keeps the state between them and wires the controls.
-import { AGENTS, P0, STRATS, SLIDERS, ME, prefs, savePrefs, city, feedEvent, findAgent, findCoin, agentPath, coinPath } from './shared.js';
-import * as D from './desktop.js';
-import * as M from './mobile.js';
+import { AGENTS, P0, STRATS, SLIDERS, ME, prefs, savePrefs, city, feedEvent, findAgent, findCoin, agentPath, coinPath } from './shared.js?v=7acf7cae97';
+import * as D from './desktop.js?v=7acf7cae97';
+import * as M from './mobile.js?v=7acf7cae97';
 
 const root = document.getElementById('root');
 const html = document.documentElement;
@@ -132,7 +132,7 @@ function render() {
       <div class="na-shell">
         ${D.rail(S)}
         <div class="na-col" id="scroll">
-          <main class="mn${S.page === 'home' ? ' mn--bleed' : ''}" id="main">${D.PAGES[S.page](S)}</main>
+          <main class="mn mn--bleed" id="main">${D.PAGES[S.page](S)}</main>
           ${D.footer()}
         </div>
       </div>
@@ -144,11 +144,15 @@ function render() {
   document.title = title();
   afterRender();
 }
+// The resolution the city is built at, in canvas pixels of height. Home's header area takes the
+// renderer's own on a desktop. A band is short, so it builds a short city -- the same street, sky
+// to pavement, at a smaller scale -- rather than showing a slice of a tall one.
+const cityRes = () => (S.page === 'home' ? (mq.matches ? 880 : undefined) : mq.matches ? 230 : 280);
 function afterRender() {
+  const canvas = document.getElementById('city');
+  // Mount after layout, so the first frame is built at the canvas's real size.
+  if (canvas) requestAnimationFrame(() => city.mount(canvas, cityRes(), S.page === 'home' ? onPins : null));
   if (S.page === 'home') {
-    const canvas = document.getElementById('city');
-    // Mount after layout, so the first frame is built at the canvas's real size.
-    if (canvas) requestAnimationFrame(() => city.mount(canvas, mq.matches ? 880 : undefined, onPins));
     const feed = document.getElementById('feed');
     if (feed) {
       feed.addEventListener('pointerenter', () => (S.feedHover = true));
@@ -163,7 +167,13 @@ function renderMain() {
   const fk = document.activeElement?.dataset?.fk ?? null;
   const keep = document.getElementById('results');
   const listTop = keep ? keep.scrollTop : 0;
+  // The band's city carries on drawing: its canvas is moved into the new page rather than redrawn.
+  const drawn = document.getElementById('city');
   main.innerHTML = mq.matches ? M.mPage(S) : D.PAGES[S.page](S);
+  const fresh = document.getElementById('city');
+  if (drawn && fresh) fresh.replaceWith(drawn);
+  else if (fresh) city.mount(fresh, cityRes(), null);
+  else city.unmount();
   if (!mq.matches) document.getElementById('rail').outerHTML = D.rail(S);
   document.title = title();
   const again = document.getElementById('results');

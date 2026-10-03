@@ -5,8 +5,8 @@ import {
   coinPath, av, logo, ME, HERO_STATS, PIN_MOBILE, STRATS, riskBars, TOGGLES, SLIDERS, MY_LOG,
   POSITIONS, candles, TFS, coinView, STEPS, PARAMS, MATRIX, SHIELDS, LB_RANGE,
   board, hex,
-} from './shared.js';
-import { coinList, billboard } from './desktop.js';
+} from './shared.js?v=7acf7cae97';
+import { coinList, billboard } from './desktop.js?v=7acf7cae97';
 
 // The brand kit's Noctis Agentic lockup: NOCTIS, the green spear, AGENTIC under it with its pixel
 // shadow. The kit's own file, cropped to the whole lockup -- the spear's fade and tip included -- so
@@ -60,8 +60,10 @@ export function mTicker() {
 }
 const back = (href, label, right = '') =>
   `<div class="m-bar"><a class="m-back" href="${href}" data-link><span class="chev" aria-hidden="true">‹</span><span class="pix">${label}</span></a>${right}</div>`;
+// A page's head is a band, as on the desktop: its kicker and title over a short strip of the city.
+// Its controls follow in a bar of their own under the band.
 const mhead = (title, kick = '', extra = '') =>
-  `<div class="m-head">${kick ? `<div class="kick sm">${kick}</div>` : ''}<h1 class="pix m-h1">${title}</h1>${extra}</div>`;
+  `<header class="m-band"><canvas id="city" class="city pixel" aria-hidden="true"></canvas><div class="m-band-body">${kick ? `<div class="kick sm">${kick}</div>` : ''}<h1 class="pix m-h1">${title}</h1></div></header>${extra ? `<div class="m-head">${extra}</div>` : ''}`;
 const mfoot = () => `<footer class="m-ft">
   <div class="ft-brand">${LOCKUP('Noctis Agentic')}</div>
   <p><span style="color:var(--amber)">● Concept preview.</span> Mockup · illustrative data. Noctis Agentic is separate from noctis.zone, with its own contracts, pools and machine fees.</p>

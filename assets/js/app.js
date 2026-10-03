@@ -101,7 +101,15 @@ function navigate(href) {
 function onPins(p) {
   S.pins = p;
   const box = document.getElementById('pins');
-  if (box) box.innerHTML = mq.matches ? M.mPins(p) : D.pinsHtml(p);
+  if (!box) return;
+  if (mq.matches) {
+    box.innerHTML = M.mPins(p);
+    return;
+  }
+  box.innerHTML = D.pinsHtml(p);
+  // Fitted round the words now they are laid out, and again once the webfonts have settled them.
+  D.fitPins(box.parentElement);
+  if (document.fonts) document.fonts.ready.then(() => D.fitPins(box.parentElement));
 }
 function render() {
   city.unmount();

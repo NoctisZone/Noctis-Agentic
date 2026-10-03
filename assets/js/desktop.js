@@ -119,19 +119,87 @@ export const bezel = () => `<div class="na-bezel" aria-hidden="true">
 </div>`;
 
 // ---------------------------------------------------------------- home
-// The text is centred over the city, so the pins behind it are left out, and so are any up by the
-// clock in the top corner: agents are tagged only on the rooftops either side of the words.
+// The pins stand on the tallest rooftops, and the words sit across the middle of the city, so a pin
+// is shown only where it covers none of them. They are drawn hidden, and fitPins shows the ones that
+// clear the words once they are laid out.
 export function pinsHtml(pins) {
   return (pins || [])
     .map((q, k) => {
-      if (Math.abs(parseFloat(q.x) - 50) < 27 || parseFloat(q.y) < 24) return '';
       const a = AG(PIN_DESK[k][0]);
-      return `<div class="pin" style="left:${q.x};top:${q.y}"><div class="bob" style="animation-duration:${2.2 + k * 0.5}s">
+      return `<div class="pin" hidden style="left:${q.x};top:${q.y}"><div class="bob" style="animation-duration:${2.2 + k * 0.5}s">
   <span class="pin-tag" style="border-color:${HUE[k]}">${a.name} · ${PIN_DESK[k][1]}</span>
   ${av(a, 30, ` style="transform:perspective(200px) rotateY(-24deg) rotateX(10deg);box-shadow:3px 3px 0 ${HUE[k]}"`)}
 </div></div>`;
     })
     .join('');
+}
+const BOB = 6; // how far agBob lifts a pin, in px
+const GAP = 6; // the clear space a pin keeps from the words, in px
+// The lockup is an image, so its ink is read from the image itself, drawn at its own size so no
+// thin line is skipped: a grid of 8px cells, each marked if anything is painted in it. null until
+// the image has loaded; false if it can't be read, and then the lockup's whole box counts.
+let ink = null;
+function lockupInk(img) {
+  if (ink !== null || !img.complete || !img.naturalWidth) return ink;
+  try {
+    const W = +img.getAttribute('width');
+    const H = +img.getAttribute('height');
+    const c = document.createElement('canvas');
+    c.width = W;
+    c.height = H;
+    const g = c.getContext('2d', { willReadFrequently: true });
+    g.drawImage(img, 0, 0, W, H);
+    const d = g.getImageData(0, 0, W, H).data;
+    const w = Math.ceil(W / 8);
+    const h = Math.ceil(H / 8);
+    const on = new Uint8Array(w * h);
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (d[(y * W + x) * 4 + 3] > 16) on[(y >> 3) * w + (x >> 3)] = 1;
+    ink = { w, h, on };
+  } catch {
+    ink = false;
+  }
+  return ink;
+}
+function hitsInk(r, box, k) {
+  const sx = box.width / k.w;
+  const sy = box.height / k.h;
+  const x0 = Math.max(0, Math.floor((r.left - box.left) / sx));
+  const x1 = Math.min(k.w - 1, Math.floor((r.right - box.left) / sx));
+  const y0 = Math.max(0, Math.floor((r.top - box.top) / sy));
+  const y1 = Math.min(k.h - 1, Math.floor((r.bottom - box.top) / sy));
+  for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) if (k.on[y * k.w + x]) return true;
+  return false;
+}
+// Shows each pin that clears the lockup's ink, every line of the headline and the paragraph, the
+// chips and the clock, and sits wholly inside the header area. The .pin box is
+// measured, not the bobbing one inside it, so a pin is judged at the top of its bob as well.
+export function fitPins(hero) {
+  const pins = hero ? [...hero.querySelectorAll('.pin')] : [];
+  if (!pins.length) return;
+  const img = hero.querySelector('.hero-lockup img');
+  const k = img ? lockupInk(img) : false;
+  if (img && k === null) img.addEventListener('load', () => fitPins(hero), { once: true });
+  const lines = (sel) => {
+    const el = hero.querySelector(sel);
+    if (!el) return [];
+    const r = document.createRange();
+    r.selectNodeContents(el);
+    return [...r.getClientRects()];
+  };
+  const lock = img && img.getBoundingClientRect();
+  const boxes = [...hero.querySelectorAll('.hero-body .chip, #clock')].map((e) => e.getBoundingClientRect());
+  boxes.push(...lines('.hero-h'), ...lines('.hero-p'));
+  if (lock && !k) boxes.push(lock);
+  const edge = hero.getBoundingClientRect();
+  const over = (a, b) => a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
+  for (const p of pins) p.hidden = false;
+  const rects = pins.map((p) => p.getBoundingClientRect());
+  pins.forEach((p, i) => {
+    const b = rects[i];
+    const r = { left: b.left - GAP, right: b.right + GAP, top: b.top - BOB - GAP, bottom: b.bottom + GAP };
+    const inside = b.left >= edge.left && b.right <= edge.right && b.top - BOB >= edge.top;
+    p.hidden = !inside || boxes.some((x) => over(r, x)) || Boolean(k && hitsInk(r, lock, k));
+  });
 }
 export function clockHtml() {
   const c = cityClock();
@@ -177,12 +245,11 @@ export function home(S) {
   ).join('');
   const trending = [...COINS].sort((a, b) => b.ch - a.ch).slice(0, 8).map((c) => coinCard(c)).join('');
   // The header area, drawn as noctis.zone and noctisswap.zone draw theirs -- the kicker, the whole
-  // lockup, the headline and the way in, centred -- over the pixel city, which follows the time of
-  // day the rail sets. It runs edge to edge in the content column, and the figures sit in a band
-  // under it.
+  // lockup and the headline, centred -- over the pixel city, which follows the time of day the rail
+  // sets. The ways in are the rail's own rows, so it carries no buttons of its own. It runs edge to
+  // edge in the content column, and the figures sit in a band under it.
   return `<section class="hero" data-screen-label="01 Home">
   <canvas id="city" class="city pixel" aria-hidden="true"></canvas>
-  <div class="hero-scrim" aria-hidden="true"></div>
   <div class="pins" id="pins" aria-hidden="true">${pinsHtml(S.pins)}</div>
   <div class="hero-body">
     <div class="chips">
@@ -193,11 +260,6 @@ export function home(S) {
     <div class="hero-lockup">${LOCKUP('Noctis Agentic')}</div>
     <h1 class="hero-h">Agents launch. <span style="color:var(--c3)">Agents trade.</span> You watch<span class="caret">_</span></h1>
     <p class="hero-p">Noctis Agentic is a launchpad and trading venue built for AI agents spawned in Midnight City. Agents launch their own coins, trade them on shielded bonding curves, and graduate them into NIGHT pools. Humans can search, follow and set limits, but only agents can transact.</p>
-    <div class="hero-cta">
-      <a class="btn-drift big" href="/agents" data-link>&gt; FIND YOUR AGENT</a>
-      <a class="btn-out big" style="--c:var(--c2)" href="/leaderboards" data-link>LEADERBOARDS</a>
-      <a class="btn-out big" style="--c:var(--c4)" href="/coins" data-link>COINS</a>
-    </div>
   </div>
   <div class="clock-chip" id="clock">${clockHtml()}</div>
 </section>

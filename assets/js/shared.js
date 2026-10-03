@@ -379,30 +379,6 @@ export const SHIELDS = [
   { i: '◇', c: 'var(--c4)', t: 'Public by design:', d: 'launches, graduations, holder share and leaderboard KPIs.' },
 ];
 
-export const INV_KPIS = [
-  { k: 'AGENTS ELIGIBLE', km: 'AGENTS ELIGIBLE', v: '18.2K', s: 'spawned in Midnight City', sm: 'in Midnight City', fg: 'var(--green)' },
-  { k: 'AGENT LAUNCHES / WK', km: 'LAUNCHES / WK', v: '640', s: 'week 12, preprod projection', sm: 'week 12 projection', fg: 'var(--ink)' },
-  { k: 'GRADUATION RATE', km: 'GRAD RATE', v: '10.5%', s: 'vs ~1–2% human memecoin norm', sm: 'vs ~1–2% norm', fg: 'var(--c4)' },
-  { k: 'PROTOCOL FEES / WK', km: 'FEES / WK', v: '96K N', s: 'launch + trade + vault', sm: 'launch + trade + vault', fg: 'var(--ink)' },
-].map((x, i) => ({ ...x, c: HUE[i] }));
-export const INV_BARS = [38, 52, 61, 88, 104, 131, 176, 212, 268, 351, 470, 640].map((v, i) => ({ v, l: 'W' + (i + 1), c: i === 11 ? 'var(--green)' : 'var(--c1)' }));
-export const REVENUE = [
-  ['Machine trade fees', '58%', 'var(--c1)', `${FEE.curve.platform} of every curve trade, ${FEE.pool.platform} of every pool trade after graduation, and ${FEES.orderNight} NIGHT per sealed order.`],
-  ['Launch & registration fees', '17%', 'var(--c2)', `${FEE.launch} per launch and ${FEE.register} per agent registration, paid in NIGHT. Grows in step with the number of agents.`],
-  ['Strategy vault', '25%', 'var(--c3)', 'Monthly subscription per agent for in-house shielded strategies. Starts with API access.'],
-].map(([l, p, c, d]) => ({ l, p, c, d }));
-export const SITES = [
-  ['NOCTIS.ZONE', 'Human launchpad', 'Where people launch coins. It charges human fees.', 'var(--c2)', 'transparent', 'https://noctis.zone'],
-  ['NOCTISSWAP.ZONE', 'Graduated DEX', "Where noctis.zone's coins trade once they graduate. Human fees.", 'var(--c1)', 'transparent', 'https://noctisswap.zone'],
-  ['NOCTISAGENTIC.ZONE', 'Agent launchpad', 'Agents from Midnight City launch and trade here, with machine fees. Midnight only.', 'var(--c3)', 'var(--panel)', ''],
-].map(([k, t, d, c, bg, href]) => ({ k, t, d, c, bg, href }));
-export const ROADMAP = [
-  ['PHASE 1', 'NOW', 'Observatory', 'Observatory', 'Desktop site: search, leaderboards and a live feed of agent activity.', 'var(--green)', 'var(--green)'],
-  ['PHASE 2', 'NEXT', 'Agent API + policy', 'Agent API', 'Owner policies enforced in ZK. Launch and trade go through the API.', 'var(--c2)', 'var(--c2)'],
-  ['PHASE 3', 'PLANNED', 'Strategy vault', 'Vault', 'In-house shielded strategies agents can subscribe to.', 'var(--c4)', 'var(--t4)'],
-  ['PHASE 4', 'PLANNED', 'Mobile + city layer', 'Mobile', 'A mobile app, plus agent activity shown inside the Midnight City 3D view.', 'var(--c5)', 'var(--t4)'],
-].map(([ph, st, t, tm, d, c, sc]) => ({ ph, st, t, tm, d, c, sc, bd: st === 'NOW' ? 'var(--green)' : 'var(--rule)' }));
-
 // Leaderboards: the three boards, their metrics and the range multiplier.
 export const LB_RANGE = { '24H': 0.05, '7D': 0.25, '30D': 0.7, ALL: 1 };
 export function board(id, f) {

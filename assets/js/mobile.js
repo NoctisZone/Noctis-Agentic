@@ -1,10 +1,10 @@
-// Mobile layout (narrower than 1000px): the eleven phone screens as real pages,
+// Mobile layout (narrower than 1000px): the ten phone screens as real pages,
 // with the pixel tab bar. There is no retro monitor here.
 import {
   AGENTS, AG, COINS, HUE, RNG, FEE, FEE_ROWS, prefs, cityClock, esc, fmt, pct, signed, up, segBar, agentPath,
   coinPath, av, logo, ME, HERO_STATS, PIN_MOBILE, STRATS, riskBars, TOGGLES, SLIDERS, MY_LOG,
-  POSITIONS, candles, TFS, coinView, STEPS, PARAMS, MATRIX, SHIELDS, INV_KPIS, INV_BARS, REVENUE, SITES, ROADMAP,
-  LB_RANGE, board, hex,
+  POSITIONS, candles, TFS, coinView, STEPS, PARAMS, MATRIX, SHIELDS, LB_RANGE,
+  board, hex,
 } from './shared.js';
 import { coinList, billboard } from './desktop.js';
 
@@ -41,7 +41,7 @@ function ico(name, col) {
   icoCache[key] = cv.toDataURL();
   return icoCache[key];
 }
-const TAB_OF = { home: 'home', docs: 'home', investors: 'home', notfound: 'home', agents: 'agents', coins: 'coins', leaders: 'ranks', my: 'my', strats: 'my' };
+const TAB_OF = { home: 'home', docs: 'home', notfound: 'home', agents: 'agents', coins: 'coins', leaders: 'ranks', my: 'my', strats: 'my' };
 export function mTabs(page) {
   const cur = TAB_OF[page] || 'home';
   return `<nav class="m-tabs" aria-label="Main">${TABS.map(([id, label, href], i) => {
@@ -140,7 +140,6 @@ export function mHome(S) {
   <a class="m-link" href="/leaderboards" data-link><span class="pix">Leaderboards</span><span>→</span></a>
   <a class="m-link" href="/strategies" data-link><span class="pix">Strategy vault</span><span>→</span></a>
   <a class="m-link" href="/how-it-works" data-link><span class="pix">How it works</span><span>→</span></a>
-  <a class="m-link" href="/investors" data-link><span class="pix">Investors</span><span>→</span></a>
 </div>
 <div class="m-sec"><div class="kick sm">CITY VIEW</div><div class="m-view" id="mview">${mView()}</div></div>
 ${mfoot()}`;
@@ -383,7 +382,7 @@ export function mStrats(S) {
 ${mfoot()}`;
 }
 
-// ---------------------------------------------------------------- 10 how it works, 11 investors
+// ---------------------------------------------------------------- 10 how it works
 export function mDocs() {
   const steps = STEPS.map(
     (s) => `<div class="m-step"><div class="m-step-rail"><span class="pix numtile" style="background:${s.c}">${s.n}</span><span class="m-step-line"></span></div><div class="grow"><div class="pix m-step-t">${s.t}</div><p>${s.dm}</p></div></div>`,
@@ -399,20 +398,6 @@ export function mDocs() {
   <div class="m-box"><div class="kick sm">WHO CAN DO WHAT</div><div class="matrix"><span class="mx-h">ACTION</span><span class="mx-h c">AGENT</span><span class="mx-h c">HUMAN</span>${matrix}</div></div>
   <div class="m-box plain"><div class="pix m-sub-h">What Midnight shields</div><div class="shields">${shields}</div></div>
 </div>
-${mfoot()}`;
-}
-export function mInvestors() {
-  const kpis = INV_KPIS.map((k) => `<div class="m-mstat" style="--c:${k.c}"><div class="lbl">${k.km}</div><div class="pix" style="color:${k.fg}">${k.v}</div><div class="sub">${k.sm}</div></div>`).join('');
-  const bars = INV_BARS.map((b) => `<div style="height:${(b.v / 640) * 100}%;background-color:${b.c}"></div>`).join('');
-  const rev = REVENUE.map((r) => `<div><div class="rev-h"><span>${r.l}</span><span style="color:${r.c}">${r.p}</span></div><div class="rev-bar sm"><div style="width:${r.p};background:${r.c}"></div></div></div>`).join('');
-  const road = ROADMAP.map((r) => `<div class="m-road" style="border-color:${r.bd}"><div style="color:${r.c}">${r.ph}</div><div class="pix">${r.tm}</div></div>`).join('');
-  const sites = SITES.map((e) => `<div class="m-site"><div class="kick sm" style="color:${e.c}">${e.href ? `<a href="${e.href}" target="_blank" rel="noopener" style="color:inherit">${e.k} ↗</a>` : e.k}</div><div class="pix">${e.t}</div><p>${e.d}</p></div>`).join('');
-  return `<div class="m-head"><span class="illus sm">ILLUSTRATIVE · NOT LIVE DATA</span><h1 class="pix m-h1" style="margin-top:10px">The launchpad for <span style="color:var(--c3)">the agent economy.</span></h1></div>
-<div class="m-mstats">${kpis}</div>
-<div class="m-box"><div class="pix m-sub-h">Weekly agent launches</div><div class="m-ibars" role="img" aria-label="Weekly agent launches, illustrative: 38 in week 1 rising to 640 in week 12">${bars}</div></div>
-<div class="m-box panel">${rev}</div>
-<div class="m-roads">${road}</div>
-<div class="m-box plain"><div class="pix m-sub-h">Separate platforms, separate fees</div>${sites}</div>
 ${mfoot()}`;
 }
 export function mNotFound() {
@@ -435,8 +420,6 @@ export function mPage(S) {
       return mMy(S);
     case 'docs':
       return mDocs(S);
-    case 'investors':
-      return mInvestors(S);
     default:
       return mNotFound(S);
   }

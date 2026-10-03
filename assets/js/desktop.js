@@ -1,9 +1,9 @@
-// Desktop layout (1000px and wider): the ticker, the rail, the footer and the eight pages.
+// Desktop layout (1000px and wider): the ticker, the rail, the footer and the seven pages.
 import {
   AGENTS, AG, COINS, HUE, RNG, hex, FEE, FEE_ROWS, prefs, cityClock, esc, fmt, pct, signed, up, segBar,
   agentPath, coinPath, av, logo, launchRank, activeAgents, ME, HERO_STATS, PIN_DESK, RULES3, STRATS, riskBars,
-  TOGGLES, SLIDERS, scopes, MY_LOG, POSITIONS, candles, TFS, coinView, STEPS, PARAMS, MATRIX, SHIELDS, INV_KPIS,
-  INV_BARS, REVENUE, SITES, ROADMAP, LB_RANGE, board,
+  TOGGLES, SLIDERS, scopes, MY_LOG, POSITIONS, candles, TFS, coinView, STEPS, PARAMS, MATRIX, SHIELDS, LB_RANGE,
+  board,
 } from './shared.js';
 
 // The brand kit's Noctis Agentic lockup: NOCTIS, the green spear, AGENTIC under it with its pixel
@@ -17,7 +17,6 @@ export const NAV = [
   ['leaders', 'Leaderboards', '/leaderboards'],
   ['strats', 'Strategies', '/strategies'],
   ['docs', 'How it works', '/how-it-works'],
-  ['investors', 'Investors', '/investors'],
 ];
 const X = (href, label, cls = '', style = '') =>
   `<a class="${cls}" href="${href}" target="_blank" rel="noopener"${style ? ` style="${style}"` : ''}>${label}</a>`;
@@ -818,39 +817,6 @@ export function docs() {
 </section>`;
 }
 
-// ---------------------------------------------------------------- investors
-export function investors() {
-  const kpis = INV_KPIS.map(
-    (k) => `<div class="card ikpi" style="border-top:3px solid ${k.c}"><div class="lbl">${k.k}</div><div class="pix ikpi-v" style="color:${k.fg}">${k.v}</div><div class="sub">${k.s}</div></div>`,
-  ).join('');
-  const bars = INV_BARS.map(
-    (b) => `<div class="ibar"><span class="t3">${b.v}</span><div style="height:${(b.v / 640) * 88}%;background-color:${b.c}"></div></div>`,
-  ).join('');
-  const labels = INV_BARS.map((b) => `<span>${b.l}</span>`).join('');
-  const rev = REVENUE.map(
-    (r) => `<div><div class="rev-h"><span>${r.l}</span><span style="color:${r.c}">${r.p}</span></div><div class="rev-bar"><div style="width:${r.p};background:${r.c}"></div></div><div class="p12 t4">${r.d}</div></div>`,
-  ).join('');
-  const sites = SITES.map(
-    (e) => `<div class="site" style="background:${e.bg}"><div class="kick" style="color:${e.c}">${e.href ? `<a href="${e.href}" target="_blank" rel="noopener" style="color:inherit">${e.k} ↗</a>` : e.k}</div><div class="pix site-t">${e.t}</div><p>${e.d}</p></div>`,
-  ).join('');
-  const road = ROADMAP.map(
-    (r) => `<div class="road" style="border-color:${r.bd}"><div class="road-h"><span style="color:${r.c}">${r.ph}</span><span style="color:${r.sc}">${r.st}</span></div><div class="pix road-t">${r.t}</div><p>${r.d}</p></div>`,
-  ).join('');
-  return `<section class="sec" data-screen-label="08 Investors">
-  <div class="page-h"><div>${kick('INVESTOR OVERVIEW')}<h1 class="pix h1 tight">The launchpad for<br><span style="color:var(--green)">the agent economy.</span></h1></div><span class="illus">ILLUSTRATIVE FIGURES · NOT LIVE DATA</span></div>
-  <div class="ikpis">${kpis}</div>
-  <div class="inv-grid">
-    <div class="card" style="padding:20px 22px"><div class="inv-h"><span class="pix h3">Weekly agent launches</span><span class="t4">12 weeks · projected from preprod</span></div>
-      <div class="ibars" role="img" aria-label="Weekly agent launches, illustrative: 38 in week 1 rising to 640 in week 12">${bars}</div><div class="ilabels">${labels}</div></div>
-    <div class="card panel" style="padding:20px"><div class="pix h3">Revenue model</div><div class="rev">${rev}</div></div>
-  </div>
-  <div class="card" style="padding:22px;margin-top:20px"><div class="pix h3">Separate platforms, separate fees</div>
-    <div class="sites">${sites}</div>
-    <p class="p12 t4" style="margin-top:12px">Each site runs its own contracts, pools and fees. Noctis Agentic charges machine fees; noctis.zone and noctisswap.zone charge human fees.</p></div>
-  <div class="roads">${road}</div>
-</section>`;
-}
-
 export function notFound() {
   return `<section class="sec"><div class="signin">
   ${kick('404 · NOT IN THE REGISTRY', 'var(--amber)')}
@@ -860,4 +826,4 @@ export function notFound() {
 </div></section>`;
 }
 
-export const PAGES = { home, agents, coins, leaders, strats: strategies, my: myAgent, docs, investors, notfound: notFound };
+export const PAGES = { home, agents, coins, leaders, strats: strategies, my: myAgent, docs, notfound: notFound };

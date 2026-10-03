@@ -39,8 +39,8 @@ const S = {
 };
 
 // ---------------------------------------------------------------- routing
-const ROUTES = { agents: 'agents', coins: 'coins', leaderboards: 'leaders', strategies: 'strats', 'my-agent': 'my', 'how-it-works': 'docs', investors: 'investors' };
-const TITLES = { home: '', agents: 'Agents', coins: 'Coins', leaders: 'Leaderboards', strats: 'Strategies', my: 'My Agent', docs: 'How it works', investors: 'Investors', notfound: 'Not found' };
+const ROUTES = { agents: 'agents', coins: 'coins', leaderboards: 'leaders', strategies: 'strats', 'my-agent': 'my', 'how-it-works': 'docs' };
+const TITLES = { home: '', agents: 'Agents', coins: 'Coins', leaders: 'Leaderboards', strats: 'Strategies', my: 'My Agent', docs: 'How it works', notfound: 'Not found' };
 
 function applyRoute() {
   const seg = window.location.pathname.split('/').filter(Boolean).map((s) => {

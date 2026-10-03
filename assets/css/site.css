@@ -635,19 +635,21 @@ a.trow:hover { background: var(--hover); }
 .m-me { flex: none; display: grid; place-items: center; width: 44px; height: 44px; border: 2px solid var(--green); background: var(--desk); }
 /* The header area, laid out as noctis.zone and noctisswap.zone lay theirs out on a phone -- the
    whole lockup centred, the headline and the paragraph under it -- over the city, as on the desktop.
-   The clock heads the column, with the chips under it. */
+   The clock heads the column, with the chips under it. The lockup leads at 300px; the billboard is
+   kept small under it. */
 .m-hero { border-bottom: 2px solid var(--rule); }
 .m-hero .hero-body { padding: 16px 16px 64px; gap: 12px; }
 .m-hero .chips { gap: 6px; }
-.m-hero .hero-lockup { width: min(250px, 72%); margin: 0; }
+.m-hero .hero-lockup { width: min(300px, 86%); margin: 0; }
 .m-hero .hero-h { font-size: 34px; line-height: 1; }
-.m-hero .board { margin: 8px 4px 0 0; }
-.m-hero .hero-p { padding: 10px 12px; font-size: 14px; line-height: 1.5; }
-/* A tablet, still the phone layout, has the room for a larger lockup and headline. */
+.m-hero .board { max-width: 300px; margin: 8px 4px 0 0; }
+.m-hero .hero-p { padding: 8px 10px; font-size: 12.5px; line-height: 1.45; }
+/* A tablet, still the phone layout, has the room for a larger lockup, headline and billboard. */
 @container na-col (min-width: 600px) {
   .m-hero .hero-body { padding: 28px 32px 72px; gap: 16px; }
   .m-hero .hero-lockup { width: min(520px, 64%); }
   .m-hero .hero-h { font-size: 46px; }
+  .m-hero .board { max-width: 560px; }
   .m-hero .hero-p { padding: 12px 20px; font-size: 15px; line-height: 1.6; }
 }
 .m-clock { display: flex; align-items: center; gap: 6px; padding: 5px 7px; background: var(--desk); border: 2px solid var(--c2); font: 600 8.5px/1 var(--mono); letter-spacing: .08em; color: var(--c2); white-space: nowrap; }

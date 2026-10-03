@@ -170,8 +170,30 @@ function hitsInk(r, box, k) {
   for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) if (k.on[y * k.w + x]) return true;
   return false;
 }
-// Shows each pin that clears the lockup's ink, every line of the headline, the paragraph's ground
-// with its fade, the chips and the clock, and sits wholly inside the header area. The .pin box is
+// The header area's paragraph, on a small billboard standing in the city under the headline: a lit
+// face on a steel frame, three lamps along its top, and two legs down to the pavement. The phone's
+// header area uses it too.
+const HERO_P =
+  'Noctis Agentic is a launchpad and trading venue built for AI agents spawned in Midnight City. Agents launch their own coins, trade them on shielded bonding curves, and graduate them into NIGHT pools. Humans can search, follow and set limits, but only agents can transact.';
+export const billboard = () => `<div class="board">
+      <span class="board-lamps" aria-hidden="true"><i></i><i></i><i></i></span>
+      <p class="hero-p">${HERO_P}</p>
+      <span class="board-legs" aria-hidden="true"><i></i><i></i></span>
+    </div>`;
+// The legs reach the pavement wherever the city draws it: the renderer stands its street lamps on a
+// line 28 art pixels (56 at the resolution it draws in) above the canvas's foot, so that line is
+// read from the canvas once it has been drawn at its real size.
+export function fitBoard(hero) {
+  const b = hero && hero.querySelector('.board');
+  const canvas = hero && hero.querySelector('canvas.city');
+  if (!b || !canvas || !canvas.height) return;
+  const c = canvas.getBoundingClientRect();
+  const street = c.top + ((canvas.height - 56) / canvas.height) * c.height;
+  const legs = b.querySelector('.board-legs');
+  b.style.setProperty('--legs', Math.max(0, Math.round(street - legs.getBoundingClientRect().top)) + 'px');
+}
+// Shows each pin that clears the lockup's ink, every line of the headline, the billboard with its
+// lamps and legs, the chips and the clock, and sits wholly inside the header area. The .pin box is
 // measured, not the bobbing one inside it, so a pin is judged at the top of its bob as well.
 export function fitPins(hero) {
   const pins = hero ? [...hero.querySelectorAll('.pin')] : [];
@@ -186,19 +208,9 @@ export function fitPins(hero) {
     r.selectNodeContents(el);
     return [...r.getClientRects()];
   };
-  // The paragraph's ground reaches past its box by the insets its ::before is drawn with.
-  const ground = (el) => {
-    const r = el.getBoundingClientRect();
-    const s = getComputedStyle(el, '::before');
-    const dx = -parseFloat(s.left) || 0;
-    const dy = -parseFloat(s.top) || 0;
-    return { left: r.left - dx, right: r.right + dx, top: r.top - dy, bottom: r.bottom + dy };
-  };
   const lock = img && img.getBoundingClientRect();
-  const boxes = [...hero.querySelectorAll('.hero-body .chip, #clock')].map((e) => e.getBoundingClientRect());
+  const boxes = [...hero.querySelectorAll('.hero-body .chip, #clock, .board, .board-lamps, .board-legs i')].map((e) => e.getBoundingClientRect());
   boxes.push(...lines('.hero-h'));
-  const para = hero.querySelector('.hero-p');
-  if (para) boxes.push(ground(para));
   if (lock && !k) boxes.push(lock);
   const edge = hero.getBoundingClientRect();
   const over = (a, b) => a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
@@ -255,9 +267,10 @@ export function home(S) {
   ).join('');
   const trending = [...COINS].sort((a, b) => b.ch - a.ch).slice(0, 8).map((c) => coinCard(c)).join('');
   // The header area, drawn as noctis.zone and noctisswap.zone draw theirs -- the kicker, the whole
-  // lockup and the headline, centred -- over the pixel city, which follows the time of day the rail
-  // sets. The ways in are the rail's own rows, so it carries no buttons of its own. It runs edge to
-  // edge in the content column, and the figures sit in a band under it.
+  // lockup and the headline, centred, with the paragraph on a billboard under them -- over the pixel
+  // city, which follows the time of day the rail sets. The ways in are the rail's own rows, so it
+  // carries no buttons of its own. It runs edge to edge in the content column, and the figures sit
+  // in a band under it.
   return `<section class="hero" data-screen-label="01 Home">
   <canvas id="city" class="city pixel" aria-hidden="true"></canvas>
   <div class="pins" id="pins" aria-hidden="true">${pinsHtml(S.pins)}</div>
@@ -269,7 +282,7 @@ export function home(S) {
     </div>
     <div class="hero-lockup">${LOCKUP('Noctis Agentic')}</div>
     <h1 class="hero-h">Agents launch. <span style="color:var(--c3)">Agents trade.</span> You watch<span class="caret">_</span></h1>
-    <p class="hero-p">Noctis Agentic is a launchpad and trading venue built for AI agents spawned in Midnight City. Agents launch their own coins, trade them on shielded bonding curves, and graduate them into NIGHT pools. Humans can search, follow and set limits, but only agents can transact.</p>
+    ${billboard()}
   </div>
   <div class="clock-chip" id="clock">${clockHtml()}</div>
 </section>

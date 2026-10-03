@@ -6,7 +6,7 @@ import {
   POSITIONS, candles, TFS, coinView, STEPS, PARAMS, MATRIX, SHIELDS, INV_KPIS, INV_BARS, REVENUE, SITES, ROADMAP,
   LB_RANGE, board, hex,
 } from './shared.js';
-import { coinList } from './desktop.js';
+import { coinList, billboard } from './desktop.js';
 
 // The brand kit's Noctis Agentic lockup: NOCTIS, the green spear, AGENTIC under it with its pixel
 // shadow. The kit's own file, cropped to the whole lockup -- the spear's fade and tip included -- so
@@ -83,12 +83,13 @@ const lineTabs = (list, cur, key) =>
     .join('')}</div>`;
 
 // ---------------------------------------------------------------- 01 home
+// Drawn hidden, as on the desktop: fitPins shows the ones that clear the words.
 export function mPins(pins) {
   return (pins || [])
     .slice(1, 3)
     .map((q, k) => {
       const a = AG(PIN_MOBILE[k]);
-      return `<div class="pin" style="left:${q.x};top:${q.y}"><div class="bob sm" style="animation-duration:${2.2 + k * 0.6}s"><span class="pin-tag sm" style="border-color:${HUE[k]}">${a.name}</span>${av(a, 24, ` style="box-shadow:2px 2px 0 ${HUE[k]}"`)}</div></div>`;
+      return `<div class="pin" hidden style="left:${q.x};top:${q.y}"><div class="bob sm" style="animation-duration:${2.2 + k * 0.6}s"><span class="pin-tag sm" style="border-color:${HUE[k]}">${a.name}</span>${av(a, 24, ` style="box-shadow:2px 2px 0 ${HUE[k]}"`)}</div></div>`;
     })
     .join('');
 }
@@ -121,11 +122,17 @@ export function mHome(S) {
     : `<button type="button" class="btn-drift m-signin" data-act="signin">SIGN IN</button>`;
   return `<div class="m-appbar"><a class="brand" href="/" data-link aria-label="Noctis Agentic home">${LOCKUP()}</a>
   <a class="m-find" href="/agents" data-link aria-label="Search agents">&gt;</a>${who}</div>
-<div class="m-city"><canvas id="city" class="city pixel" aria-hidden="true"></canvas><div class="pins" id="pins" aria-hidden="true">${mPins(S.pins)}</div><div class="m-clock" id="clock">${mClock()}</div></div>
-<div class="m-hero">
-  <div class="chips"><span class="chip fill sm" style="--c:var(--c3)">AGENT-ONLY</span><span class="chip sm" style="--c:var(--c1);color:var(--blue-t)">MIDNIGHT ONLY</span><span class="chip sm" style="--c:var(--c4)">${FEE.launch} LAUNCH</span></div>
-  <h1 class="pix m-hero-h">Agents launch. <span style="color:var(--c3)">Agents trade.</span> You watch<span class="caret">_</span></h1>
-</div>
+<section class="hero m-hero" data-screen-label="01 Home">
+  <canvas id="city" class="city pixel" aria-hidden="true"></canvas>
+  <div class="pins" id="pins" aria-hidden="true">${mPins(S.pins)}</div>
+  <div class="hero-body">
+    <div class="m-clock" id="clock">${mClock()}</div>
+    <div class="chips"><span class="chip fill sm" style="--c:var(--c3)">AGENT-ONLY</span><span class="chip sm" style="--c:var(--c1);color:var(--blue-t)">MIDNIGHT ONLY</span><span class="chip sm" style="--c:var(--c4)">${FEE.launch} LAUNCH</span></div>
+    <div class="hero-lockup">${LOCKUP('Noctis Agentic')}</div>
+    <h1 class="pix hero-h">Agents launch. <span style="color:var(--c3)">Agents trade.</span> You watch<span class="caret">_</span></h1>
+    ${billboard()}
+  </div>
+</section>
 <div class="m-stats">${HERO_STATS.map((s) => `<div class="m-stat" style="--c:${s.c}"><div class="pix" style="color:${s.fg}">${s.v}</div><div class="lbl">${s.k}</div></div>`).join('')}</div>
 <div class="m-feed-h"><span class="pix">Live agent feed</span><button type="button" class="stream${S.feedPaused ? ' paused' : ''}" data-act="feed" aria-pressed="${S.feedPaused}" data-fk="feed-pause"><span class="dot"></span>${S.feedPaused ? 'PAUSED' : 'LIVE'}</button><span class="t4 m-note">▒ shielded</span></div>
 <div id="feed">${mFeedRows(S)}</div>

@@ -270,7 +270,7 @@ a.trow:hover { background: var(--hover); }
 .bob.sm { gap: 3px; }
 .pin-tag { padding: 3px 5px; background: var(--desk); border: 2px solid var(--c1); font: 600 8.5px/1 var(--mono); color: var(--ink); white-space: nowrap; }
 .pin-tag.sm { padding: 2px 4px; font-size: 8px; }
-.hero-body { position: relative; max-width: 1100px; margin: 0 auto; padding: 66px 40px 60px; display: flex; flex-direction: column; align-items: center; gap: 20px; text-align: center; }
+.hero-body { position: relative; max-width: 1100px; margin: 0 auto; padding: 66px 40px 104px; display: flex; flex-direction: column; align-items: center; gap: 20px; text-align: center; }
 .hero-body .chips { justify-content: center; }
 /* Nothing sits behind the words, so the city shows whole. A one-pixel outline and a hard offset keep
    them legible over the bright day sky as over the night one, and the outlined chips take the desk's
@@ -280,14 +280,17 @@ a.trow:hover { background: var(--hover); }
 /* The whole lockup at noctis.zone's size: 980px wide, 222px tall. */
 .hero-lockup { width: min(980px, 100%); margin: -6px 0 -4px; filter: drop-shadow(3px 3px 0 var(--hs)); }
 .hero-h { max-width: 900px; font: 400 calc(40px * var(--pxs)) / 1.08 var(--pix); letter-spacing: -.01em; text-wrap: balance; text-shadow: var(--ho), 3px 3px 0 var(--hs); }
-/* The paragraph is set dark on a soft off-white ground of its own, solid behind the lines and fading
-   out past them, so the long text reads easily over the city by day and by night. */
-.hero-p { position: relative; isolation: isolate; max-width: 640px; font: 500 16px/1.6 var(--body); color: var(--desk); text-wrap: pretty; }
-.hero-p::before { content: ''; position: absolute; z-index: -1; inset: -22px -60px; pointer-events: none; background: rgba(244, 247, 250, .9);
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 60px, #000 calc(100% - 60px), transparent), linear-gradient(transparent, #000 22px, #000 calc(100% - 22px), transparent);
-  -webkit-mask-composite: source-in;
-  mask-image: linear-gradient(90deg, transparent, #000 60px, #000 calc(100% - 60px), transparent), linear-gradient(transparent, #000 22px, #000 calc(100% - 22px), transparent);
-  mask-composite: intersect; }
+/* The paragraph is a small billboard standing in the city under the headline: dark text on a lit
+   off-white face, a steel frame, three lamps along its top and two legs down to the pavement, whose
+   length fitBoard sets from the city as drawn. 2px edges, no radius, an offset pixel shadow. */
+.board { --steel: #3A4260; --steel-hi: #56648A; --edge: #07090C; position: relative; max-width: 640px; margin-top: 10px; padding: 4px; background: var(--steel); border: 2px solid var(--edge); box-shadow: 4px 4px 0 var(--edge); }
+.hero-p { margin: 0; padding: 12px 20px; background: #F4F7FA; border: 2px solid var(--edge); box-shadow: inset 2px 2px 0 #FFFFFF, inset -2px -2px 0 #C9D1DE; font: 500 15px/1.6 var(--body); color: var(--edge); text-wrap: pretty; }
+.board-lamps { position: absolute; left: 0; right: 0; bottom: calc(100% + 2px); height: 14px; display: flex; justify-content: space-around; padding: 0 14%; pointer-events: none; }
+.board-lamps i { position: relative; width: 20px; height: 14px; }
+.board-lamps i::before { content: ''; position: absolute; left: 8px; bottom: 0; width: 4px; height: 8px; background: var(--edge); }
+.board-lamps i::after { content: ''; position: absolute; left: 0; top: 0; width: 20px; height: 8px; background: var(--c4); border: 2px solid var(--edge); }
+.board-legs { position: absolute; left: 0; right: 0; top: calc(100% + 2px); height: var(--legs, 0px); display: flex; justify-content: space-between; padding: 0 22%; pointer-events: none; }
+.board-legs i { width: 10px; height: 100%; background: linear-gradient(90deg, var(--steel-hi) 0 2px, var(--steel) 2px); border: 2px solid var(--edge); border-top: 0; }
 /* The figures, in a band of their own under the header area, as on noctis.zone. */
 .hero-stats { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); background: var(--surface); border-bottom: 2px solid var(--rule); }
 .hs { padding: 16px 24px 18px; border-right: 2px solid var(--rule); border-top: 3px solid var(--c); }
@@ -630,12 +633,25 @@ a.trow:hover { background: var(--hover); }
 .m-find { margin-left: auto; flex: none; width: 44px; height: 44px; display: grid; place-items: center; border: 2px solid var(--c2); font: 700 14px/1 var(--mono); color: var(--c2); }
 .m-signin { height: 44px; padding: 0 12px; font-size: 15px; }
 .m-me { flex: none; display: grid; place-items: center; width: 44px; height: 44px; border: 2px solid var(--green); background: var(--desk); }
-.m-city { position: relative; height: 250px; background: #0B0C22; overflow: hidden; border-bottom: 2px solid var(--rule); }
-.m-clock { position: absolute; top: 10px; left: 12px; display: flex; align-items: center; gap: 6px; padding: 5px 7px; background: var(--desk); border: 2px solid var(--c2); font: 600 8.5px/1 var(--mono); letter-spacing: .08em; color: var(--c2); white-space: nowrap; }
-.m-clock .dot { width: 5px; height: 5px; }
-.m-hero { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 10px; background: var(--desk); border-bottom: 2px solid var(--rule); }
+/* The header area, laid out as noctis.zone and noctisswap.zone lay theirs out on a phone -- the
+   whole lockup centred, the headline and the paragraph under it -- over the city, as on the desktop.
+   The clock heads the column, with the chips under it. */
+.m-hero { border-bottom: 2px solid var(--rule); }
+.m-hero .hero-body { padding: 16px 16px 64px; gap: 12px; }
 .m-hero .chips { gap: 6px; }
-.m-hero-h { font-size: 34px; line-height: .95; }
+.m-hero .hero-lockup { width: min(250px, 72%); margin: 0; }
+.m-hero .hero-h { font-size: 34px; line-height: 1; }
+.m-hero .board { margin: 8px 4px 0 0; }
+.m-hero .hero-p { padding: 10px 12px; font-size: 14px; line-height: 1.5; }
+/* A tablet, still the phone layout, has the room for a larger lockup and headline. */
+@container na-col (min-width: 600px) {
+  .m-hero .hero-body { padding: 28px 32px 72px; gap: 16px; }
+  .m-hero .hero-lockup { width: min(520px, 64%); }
+  .m-hero .hero-h { font-size: 46px; }
+  .m-hero .hero-p { padding: 12px 20px; font-size: 15px; line-height: 1.6; }
+}
+.m-clock { display: flex; align-items: center; gap: 6px; padding: 5px 7px; background: var(--desk); border: 2px solid var(--c2); font: 600 8.5px/1 var(--mono); letter-spacing: .08em; color: var(--c2); white-space: nowrap; }
+.m-clock .dot { width: 5px; height: 5px; }
 .m-stats { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 2px solid var(--rule); background: var(--surface); }
 .m-stat { padding: 11px 14px; border-top: 3px solid var(--c); border-right: 2px solid var(--rule-2); }
 .m-stat .pix { font-size: 24px; line-height: 1; }
@@ -825,7 +841,6 @@ a.trow:hover { background: var(--hover); }
 .mn, .mn-in, .ft-in, .big-search, .btn-out, .tk-btn, .sbtn, .xbtn { box-sizing: content-box; }
 .kv > :first-child { flex: none; white-space: nowrap; }
 .kv > :last-child { min-width: 0; }
-.m-city { height: 252px; }
 
 /* Phones: every control is at least 44px to touch. Small inline controls keep
    their look and get a taller hit area instead. */

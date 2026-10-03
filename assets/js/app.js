@@ -102,14 +102,16 @@ function onPins(p) {
   S.pins = p;
   const box = document.getElementById('pins');
   if (!box) return;
-  if (mq.matches) {
-    box.innerHTML = M.mPins(p);
-    return;
-  }
-  box.innerHTML = D.pinsHtml(p);
-  // Fitted round the words now they are laid out, and again once the webfonts have settled them.
-  D.fitPins(box.parentElement);
-  if (document.fonts) document.fonts.ready.then(() => D.fitPins(box.parentElement));
+  box.innerHTML = mq.matches ? M.mPins(p) : D.pinsHtml(p);
+  // The city is drawn at its real size now: the billboard's legs are set down to its pavement, and
+  // the pins fitted round the words, and both again once the webfonts have settled the words.
+  const hero = box.parentElement;
+  const fit = () => {
+    D.fitBoard(hero);
+    D.fitPins(hero);
+  };
+  fit();
+  if (document.fonts) document.fonts.ready.then(fit);
 }
 function render() {
   city.unmount();

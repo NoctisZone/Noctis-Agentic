@@ -170,8 +170,8 @@ function hitsInk(r, box, k) {
   for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) if (k.on[y * k.w + x]) return true;
   return false;
 }
-// Shows each pin that clears the lockup's ink, every line of the headline and the paragraph, the
-// chips and the clock, and sits wholly inside the header area. The .pin box is
+// Shows each pin that clears the lockup's ink, every line of the headline, the paragraph's ground
+// with its fade, the chips and the clock, and sits wholly inside the header area. The .pin box is
 // measured, not the bobbing one inside it, so a pin is judged at the top of its bob as well.
 export function fitPins(hero) {
   const pins = hero ? [...hero.querySelectorAll('.pin')] : [];
@@ -186,9 +186,19 @@ export function fitPins(hero) {
     r.selectNodeContents(el);
     return [...r.getClientRects()];
   };
+  // The paragraph's ground reaches past its box by the insets its ::before is drawn with.
+  const ground = (el) => {
+    const r = el.getBoundingClientRect();
+    const s = getComputedStyle(el, '::before');
+    const dx = -parseFloat(s.left) || 0;
+    const dy = -parseFloat(s.top) || 0;
+    return { left: r.left - dx, right: r.right + dx, top: r.top - dy, bottom: r.bottom + dy };
+  };
   const lock = img && img.getBoundingClientRect();
   const boxes = [...hero.querySelectorAll('.hero-body .chip, #clock')].map((e) => e.getBoundingClientRect());
-  boxes.push(...lines('.hero-h'), ...lines('.hero-p'));
+  boxes.push(...lines('.hero-h'));
+  const para = hero.querySelector('.hero-p');
+  if (para) boxes.push(ground(para));
   if (lock && !k) boxes.push(lock);
   const edge = hero.getBoundingClientRect();
   const over = (a, b) => a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
